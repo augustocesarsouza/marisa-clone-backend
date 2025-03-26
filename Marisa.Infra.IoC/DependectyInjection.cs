@@ -14,6 +14,8 @@ using Marisa.Application.Services;
 using brevo_csharp.Api;
 using Marisa.Application.DTOs.Validations.Interfaces;
 using Marisa.Application.DTOs.Validations.UserValidator;
+using Marisa.Application.CodeRandomUser.Interface;
+using Marisa.Application.CodeRandomUser;
 
 namespace Marisa.Infra.IoC
 {
@@ -21,7 +23,8 @@ namespace Marisa.Infra.IoC
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration["ConnectionStrings:DefaultConnection"];
+            //var connectionString = configuration["ConnectionStrings:DefaultConnection"];
+            var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
             //var connectionString = configuration.GetConnectionString("Default");
             services.AddAutoMapper(typeof(DomainToDtoMapping));
             services.AddAutoMapper(typeof(DtoToDomainMapping));
@@ -43,6 +46,9 @@ namespace Marisa.Infra.IoC
         {
             services.AddAutoMapper(typeof(DomainToDtoMapping));
 
+            services.AddSingleton<ICodeRandomDictionary, CodeRandomDictionary>();
+            services.AddSingleton<IQuantityAttemptChangePasswordDictionary, QuantityAttemptChangePasswordDictionary>();
+            
             services.AddScoped<ITransactionalEmailsApi, TransactionalEmailsApi>();
 
             services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
@@ -57,7 +63,9 @@ namespace Marisa.Infra.IoC
             
             services.AddScoped<IUserSendCodeEmailDTOValidator, UserSendCodeEmailDTOValidator>();
             services.AddScoped<IUserCreateDTOValidator, UserCreateDTOValidator>();
-
+            services.AddScoped<IUserUpdateProfileDTOValidator, UserUpdateProfileDTOValidator>();
+            services.AddScoped<IChangePasswordUserDTOValidator, ChangePasswordUserDTOValidator>();
+            
             return services;
         }
     }

@@ -9,50 +9,51 @@ namespace Marisa.Application.DTOs.Validations.UserValidator
         public UserCreateDTOValidator()
         {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .NotNull()
-                .WithMessage("Must be informed one Number Name");
+                .NotEmpty().WithMessage("Name must not be empty.")
+                .NotNull().WithMessage("Name must not be null.");
 
             RuleFor(x => x.Email)
-                .NotEmpty()
-                .NotNull()
+                .NotEmpty().WithMessage("Token must not be empty.")
+                .NotNull().WithMessage("Token must not be null.")
                 .Matches(@"^[a-zA-Z0-9._%+-]+@gmail\.com$")
-                .WithMessage("Must be informed one Number Email");
+                .WithMessage("matches invalid Email");
 
             RuleFor(x => x.Cpf)
-                .NotEmpty()
-                .NotNull()
+                .NotEmpty().WithMessage("Token must not be empty.")
+                .NotNull().WithMessage("Token must not be null.")
                 .Matches(@"^\d{11}$")
-                .WithMessage("Must be informed one Number Cpf");
+                .WithMessage("matches invalid Cpf");
 
             RuleFor(x => x.Gender)
-                .NotEmpty()
-                .NotNull()
-                .WithMessage("Must be informed one Number Gender");
+                .NotEmpty().WithMessage("Token must not be empty.")
+                .NotNull().WithMessage("Token must not be null.");
 
             RuleFor(x => x.CellPhone)
-                .NotEmpty()
-                .NotNull()
-                .Matches(@"^\d{2} \d{5} \d{4}$")
-                .WithMessage("Must be informed one Number CellPhone");
+                .NotEmpty().WithMessage("Token must not be empty.")
+                .NotNull().WithMessage("Token must not be null.")
+                .Matches(@"^\d{2} \d{5}-\d{4}$")
+                .WithMessage("matches invalid CellPhone");
 
             RuleFor(x => x.Telephone)
-                .NotEmpty()
-                .NotNull()
-                .Matches(@"^\d{2} \d{4} \d{4}$")
-                .WithMessage("Must be informed one Number CelTelephonelPhone");
+                .NotEmpty().WithMessage("Token must not be empty.")
+                .NotNull().WithMessage("Token must not be null.")
+                .Matches(@"^\d{2} \d{4}-\d{4}$")
+                .WithMessage("matches invalid CellPhone");
 
             RuleFor(x => x.BirthDateString)
-                .NotEmpty()
-                .NotNull()
+                .NotEmpty().WithMessage("Token must not be empty.")
+                .NotNull().WithMessage("Token must not be null.")
                 .Matches(@"^\d{2}/\d{2}/\d{4}$")
-                .WithMessage("Must be informed one Number BirthDateString");
+                .WithMessage("matches invalid BirthDateString");
 
             RuleFor(x => x.Password)
-                .NotEmpty()
-                .NotNull()
-                .Length(8, 30)
-                .WithMessage("Must be informed Password of the user");
+                .NotEmpty().WithMessage("Token must not be empty.")
+                .NotNull().WithMessage("Token must not be null.")
+                .Length(8, 30).WithMessage("Password must be between 8 and 30 length");
+
+            RuleFor(x => x.TokenForCreation)
+                .NotNull().WithMessage("O token não pode ser nulo.")
+                .InclusiveBetween(100000, 999999).WithMessage("O token deve ser um número de 6 dígitos.");
         }
 
         public ValidationResult ValidateDTO(UserDTO userDTO)

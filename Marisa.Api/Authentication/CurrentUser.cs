@@ -22,8 +22,9 @@ namespace Marisa.Api.Authentication
             var claims = httpContext.HttpContext.User.Claims;
 
             string headerValue = httpContext.HttpContext.Request.Headers["uid"];
+            var claimEmailValue = claims.Any(x => x.Type == "Email");
 
-            if (claims != null && claims.Any(x => x.Type == "Email"))
+            if (claims != null && claimEmailValue)
             {
                 try
                 {

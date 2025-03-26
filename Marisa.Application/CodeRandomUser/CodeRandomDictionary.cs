@@ -1,54 +1,51 @@
-﻿namespace Marisa.Application.CodeRandomUser
+﻿using Marisa.Application.CodeRandomUser.Interface;
+using System.Collections.Concurrent;
+
+namespace Marisa.Application.CodeRandomUser
 {
-    public class CodeRandomDictionary
+    public class CodeRandomDictionary : ICodeRandomDictionary
     {
-        private readonly Dictionary<string, int> DictionaryCode = new();
+        private readonly ConcurrentDictionary<string, int> _dictionaryCode = new();
+        private readonly ConcurrentDictionary<string, Timer> _timers = new();
 
-        public void Add(string idGuid, int valueCode)
+        public void Add(string key, int valueCode)
         {
-            int seila;
-            if (!DictionaryCode.TryGetValue(idGuid, out seila))
+            _dictionaryCode.AddOrUpdate(key, valueCode, (key, oldValue) => valueCode);
+
+            StartRemoveTimer(key);
+        }
+
+        public bool Container(string key, int valueCode)
+        {
+            return _dictionaryCode.TryGetValue(key, out var value) && value == valueCode;
+        }
+
+        public bool Container(string key)
+        {
+            return _dictionaryCode.ContainsKey(key);
+        }
+
+        public void Remove(string key)
+        {
+            if (_dictionaryCode.TryRemove(key, out _))
             {
-                DictionaryCode.Add(idGuid, valueCode);
-            }
-            else
-            {
-                DictionaryCode[idGuid] = valueCode;
+                // Se o item foi removido, cancela o temporizador
+                _timers.TryRemove(key, out var timer);
+                timer?.Dispose();
             }
         }
 
-        public bool Container(string guidId, int valueCode)
+        private void StartRemoveTimer(string key)
         {
-            if (DictionaryCode.ContainsKey(guidId))
-            {
-                int value;
-                if (DictionaryCode.TryGetValue(guidId, out value))
-                {
-                    if (value == valueCode)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            var timer = new Timer(RemoveItemCallback, key, TimeSpan.FromMinutes(60), Timeout.InfiniteTimeSpan);
+            _timers[key] = timer;
         }
 
-        public bool Container(string guidId)
+        private void RemoveItemCallback(object? state)
         {
-            if (DictionaryCode.ContainsKey(guidId))
+            if (state is string key)
             {
-                return true;
-            }
-
-            return false;
-        }
-
-        public void Remove(string idGuid)
-        {
-            if (DictionaryCode.ContainsKey(idGuid))
-            {
-                DictionaryCode.Remove(idGuid);
+                Remove(key);  // Chama o método Remove para remover o item do dicionário
             }
         }
     }

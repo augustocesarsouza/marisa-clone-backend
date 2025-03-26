@@ -67,7 +67,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-var keyJwtBearerSecret = builder.Configuration["Key:Jwt"];
+//var keyJwtBearerSecret = builder.Configuration["Key:Jwt"];
+var keyJwtBearerSecret = Environment.GetEnvironmentVariable("KEY_JWT");
 if (keyJwtBearerSecret != null)
 {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyJwtBearerSecret));

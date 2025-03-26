@@ -1,5 +1,7 @@
 ﻿
 
+using System.Numerics;
+
 namespace Marisa.Domain.Entities
 {
     public class User
@@ -64,6 +66,21 @@ namespace Marisa.Domain.Entities
 
         public void SetSalt(string salt)
         {
+            Salt = salt;
+        }
+
+        public void SetValueUpdateUser(string name, DateTime birthDate, char gender, string cellPhone, string telephone)
+        {
+            Name = name;
+            BirthDate = birthDate;
+            Gender = gender;
+            CellPhone = cellPhone;
+            Telephone = telephone;
+        }
+
+        public void SetValuePasswordHashAndSalt(string passwordHash, string salt)
+        {
+            PasswordHash = passwordHash;
             Salt = salt;
         }
     }

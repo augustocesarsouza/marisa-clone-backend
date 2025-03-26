@@ -16,9 +16,13 @@ namespace Marisa.Infra.Data.UtilityExternal
         {
             _configuration = configuration;
 
-            var apiSecret = _configuration["Cloudinary:ApiSecret"];
-            var apiKey = _configuration["Cloudinary:ApiKey"];
-            var accountName = _configuration["Cloudinary:AccountName"];
+            //var apiSecret = _configuration["Cloudinary:ApiSecret"];
+            //var apiKey = _configuration["Cloudinary:ApiKey"];
+            //var accountName = _configuration["Cloudinary:AccountName"];
+
+            var apiSecret = Environment.GetEnvironmentVariable("CLOUDINARY_APISECRET");
+            var apiKey = Environment.GetEnvironmentVariable("CLOUDINARY_APIKEY");
+            var accountName = Environment.GetEnvironmentVariable("CLOUDINARY_ACCOUNT_NAME");
 
             _account = new Account(apiSecret, apiKey, accountName);
         }

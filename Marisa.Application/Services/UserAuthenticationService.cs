@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Marisa.Application.CodeRandomUser;
+using Marisa.Application.CodeRandomUser.Interface;
 using Marisa.Application.DTOs;
 using Marisa.Application.DTOs.Validations.Interfaces;
 using Marisa.Application.Services.Interfaces;
@@ -20,10 +20,12 @@ namespace Marisa.Application.Services
         private readonly IUserCreateAccountFunction _userCreateAccountFunction;
         private readonly ISendEmailUser _sendEmailUser;
         private readonly IUserSendCodeEmailDTOValidator _userSendCodeEmailDTOValidator;
-        private readonly static CodeRandomDictionary _codeRandomDictionary = new();
+        //private readonly static CodeRandomDictionary _codeRandomDictionary = new();
+        private readonly ICodeRandomDictionary _codeRandomDictionary;
 
         public UserAuthenticationService(IUserRepository userRepository, IMapper mapper, IUnitOfWork unitOfWork, ITokenGeneratorUser tokenGeneratorUser,
-            IUserCreateAccountFunction userCreateAccountFunction, ISendEmailUser sendEmailUser, IUserSendCodeEmailDTOValidator userSendCodeEmailDTOValidator)
+            IUserCreateAccountFunction userCreateAccountFunction, ISendEmailUser sendEmailUser, IUserSendCodeEmailDTOValidator userSendCodeEmailDTOValidator,
+            ICodeRandomDictionary codeRandomDictionary)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -32,6 +34,7 @@ namespace Marisa.Application.Services
             _userCreateAccountFunction = userCreateAccountFunction;
             _sendEmailUser = sendEmailUser;
             _userSendCodeEmailDTOValidator = userSendCodeEmailDTOValidator;
+            _codeRandomDictionary = codeRandomDictionary;
         }
        
         public async Task<ResultService<UserDTO>> GetByIdInfoUser(string userId)
@@ -39,6 +42,23 @@ namespace Marisa.Application.Services
             try
             {
                 var infoUser = await _userRepository.GetUserByIdInfoUser(Guid.Parse(userId));
+
+                if (infoUser == null)
+                    return ResultService.Fail<UserDTO>("Error user null");
+
+                return ResultService.Ok(_mapper.Map<UserDTO>(infoUser));
+            }
+            catch (Exception ex)
+            {
+                return ResultService.Fail<UserDTO>(ex.Message);
+            }
+        }
+
+        public async Task<ResultService<UserDTO>> GetInfoToUpdateProfile(string userId)
+        {
+            try
+            {
+                var infoUser = await _userRepository.GetInfoToUpdateProfile(Guid.Parse(userId));
 
                 if (infoUser == null)
                     return ResultService.Fail<UserDTO>("Error user null");
@@ -60,7 +80,7 @@ namespace Marisa.Application.Services
                 var user = await _userRepository.GetUserInfoToLogin(email);
 
                 if (user == null)
-                    return ResultService.Fail<UserLoginDTO>("Error user null");
+                    return ResultService.Fail(new UserLoginDTO(false, new UserDTO()));
 
                 var passwordHash = user.GetPasswordHash();
                 var salt = user.GetSalt();
@@ -100,7 +120,12 @@ namespace Marisa.Application.Services
                     if (!token.IsSucess)
                         return ResultService.Fail<UserLoginDTO>(token.Message ?? "error validate token");
 
-                    userReturnToFrontend.SetToken(token.Data.Acess_Token);
+                    var tokenValue = token.Data.Acess_Token;
+
+                    if (tokenValue != null)
+                    {
+                        userReturnToFrontend.SetToken(tokenValue);
+                    }
 
                     return ResultService.Ok(new UserLoginDTO(true, userReturnToFrontend));
                 }

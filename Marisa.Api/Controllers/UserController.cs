@@ -24,7 +24,6 @@ namespace Marisa.Api.Controllers
             _currentUser = currentUser;
         }
 
-        [Authorize]
         [HttpGet("v1/user/get-by-id-info-user/{userId}")]
         public async Task<IActionResult> GetByIdInfoUser([FromRoute] string userId)
         {
@@ -33,6 +32,21 @@ namespace Marisa.Api.Controllers
                 return _baseController.Forbidden();
 
             var result = await _userAuthenticationService.GetByIdInfoUser(userId);
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("v1/user/get-info-to-update-profile/{userId}")]
+        public async Task<IActionResult> GetInfoToUpdateProfile([FromRoute] string userId)
+        {
+            var userAuth = _baseController.Validator(_currentUser);
+            if (userAuth == null)
+                return _baseController.Forbidden();
+
+            var result = await _userAuthenticationService.GetInfoToUpdateProfile(userId);
 
             if (result.IsSucess)
                 return Ok(result);
@@ -51,7 +65,7 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("v1/user/verify-password/{email}/{password}")]
         public async Task<IActionResult> VerifyPasswordUser([FromRoute] string email, [FromRoute] string password)
         {
@@ -93,6 +107,36 @@ namespace Marisa.Api.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] UserDTO userDTO)
         {
             var result = await _userManagementService.Create(userDTO);
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpPut("v1/user/update-profile")]
+        public async Task<IActionResult> UpateProfile([FromBody] UserDTO userDTO)
+        {
+            var userAuth = _baseController.Validator(_currentUser);
+            if (userAuth == null)
+                return _baseController.Forbidden();
+
+            var result = await _userManagementService.UpateProfile(userDTO);
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpPut("v1/user/change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordUser changePasswordUser)
+        {
+            var userAuth = _baseController.Validator(_currentUser);
+            if (userAuth == null)
+                return _baseController.Forbidden();
+
+            var result = await _userManagementService.ChangePassword(changePasswordUser);
 
             if (result.IsSucess)
                 return Ok(result);

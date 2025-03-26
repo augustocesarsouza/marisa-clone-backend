@@ -14,12 +14,22 @@ namespace Marisa.Infra.Data.Repositories
             _context = context;
         }
 
-        public async Task<User?> GetUserById(Guid id)
+        public async Task<User?> GetUserById(Guid? id)
         {
             var user = await _context
                  .Users
                  .Where(u => u.Id == id)
                  .FirstOrDefaultAsync();
+
+            return user;
+        }
+
+        public async Task<User?> GetUserByIdToChangePassword(Guid? id)
+        {
+            var user = await _context
+                 .Users
+                 .Where(u => u.Id == id)
+                .FirstOrDefaultAsync();
 
             return user;
         }
@@ -41,6 +51,18 @@ namespace Marisa.Infra.Data.Repositories
             .Where(u => u.Id == id)
                 .Select(x => new User(x.Id, x.Name, x.Email, x.BirthDate, x.Cpf, x.Gender, x.CellPhone, x.Telephone, "", "", x.UserImage))
             .FirstOrDefaultAsync();
+
+            return user;
+        }
+
+        public async Task<User?> GetInfoToUpdateProfile(Guid id)
+        {
+            var user = await _context
+                .Users
+            .Where(u => u.Id == id)
+                .Select(x => new User(Guid.Empty, x.Name, "", x.BirthDate, x.Cpf, x.Gender, x.CellPhone, x.Telephone, "", "", ""))
+            .FirstOrDefaultAsync();
+
             return user;
         }
 
