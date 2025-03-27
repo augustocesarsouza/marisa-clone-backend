@@ -106,4 +106,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await DataHelper.ManageDataAsync(services);
+}
+
 app.Run();

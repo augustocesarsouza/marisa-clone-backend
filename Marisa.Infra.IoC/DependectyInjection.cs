@@ -24,7 +24,8 @@ namespace Marisa.Infra.IoC
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             //var connectionString = configuration["ConnectionStrings:DefaultConnection"];
-            var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+            var connectionString = ConnectionHelper.GetConnectionString(configuration);
+            //var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
             //var connectionString = configuration.GetConnectionString("Default");
             services.AddAutoMapper(typeof(DomainToDtoMapping));
             services.AddAutoMapper(typeof(DtoToDomainMapping));
