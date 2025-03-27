@@ -55,11 +55,10 @@ namespace Marisa.Application.Services
             {
                 await _unitOfWork.BeginTransaction();
 
-                //var tokenForCreation = userDTO.TokenForCreation ?? 0;
-                //var email = userDTO.Email ?? "";
+                var tokenForCreation = userDTO.TokenForCreation ?? 0;
+                var email = userDTO.Email ?? "";
 
-                //var valueContain = _codeRandomDictionary.Container(email, tokenForCreation);
-                var valueContain = true;
+                var valueContain = _codeRandomDictionary.Container(email, tokenForCreation);
 
                 var createUserDTO = new CreateUserDTO(false, null);
 

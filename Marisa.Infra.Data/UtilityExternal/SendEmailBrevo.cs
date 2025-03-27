@@ -23,7 +23,7 @@ namespace Marisa.Infra.Data.UtilityExternal
             try
             {
                 //var keyApi = _configuration["Brevo:KeyApi"];
-                var keyApi = Environment.GetEnvironmentVariable("BREVO_KEYAPI");
+                var keyApi = Environment.GetEnvironmentVariable("BREVO_KEYAPI") ?? _configuration["Brevo:KeyApi"];
 
                 if (!Configuration.Default.ApiKey.ContainsKey("api-key"))
                     Configuration.Default.ApiKey["api-key"] = keyApi;
@@ -63,7 +63,7 @@ namespace Marisa.Infra.Data.UtilityExternal
         {
             try
             {
-                var keyApi = Environment.GetEnvironmentVariable("BREVO_KEYAPI");
+                var keyApi = Environment.GetEnvironmentVariable("BREVO_KEYAPI") ?? _configuration["Brevo:KeyApi"];
 
                 if (!Configuration.Default.ApiKey.ContainsKey("api-key"))
                     Configuration.Default.ApiKey["api-key"] = keyApi;

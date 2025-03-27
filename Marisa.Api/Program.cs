@@ -68,7 +68,7 @@ builder.Services.AddCors(options =>
 });
 
 //var keyJwtBearerSecret = builder.Configuration["Key:Jwt"];
-var keyJwtBearerSecret = Environment.GetEnvironmentVariable("KEY_JWT");
+var keyJwtBearerSecret = Environment.GetEnvironmentVariable("KEY_JWT") ?? builder.Configuration["Key:Jwt"];
 if (keyJwtBearerSecret != null)
 {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyJwtBearerSecret));
