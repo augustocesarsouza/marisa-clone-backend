@@ -68,8 +68,8 @@ namespace Marisa.Infra.Data.UtilityExternal
                 if (!Configuration.Default.ApiKey.ContainsKey("api-key"))
                     Configuration.Default.ApiKey["api-key"] = keyApi;
 
-                string SenderName = "lucas";
-                string SenderEmail = "lucasdaniel545@gmail.com";
+                string SenderName = "augusto";
+                string SenderEmail = "augustocesarsantana90@gmail.com";
                 SendSmtpEmailSender emailSender = new SendSmtpEmailSender(SenderName, SenderEmail);
 
                 //if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Email))
