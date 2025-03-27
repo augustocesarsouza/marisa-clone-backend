@@ -13,42 +13,42 @@ namespace Marisa.Application.DTOs.Validations.UserValidator
                 .NotNull().WithMessage("Name must not be null.");
 
             RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Token must not be empty.")
-                .NotNull().WithMessage("Token must not be null.")
+                .NotEmpty().WithMessage("Email must not be empty.")
+                .NotNull().WithMessage("Email must not be null.")
                 .Matches(@"^[a-zA-Z0-9._%+-]+@gmail\.com$")
                 .WithMessage("matches invalid Email");
 
             RuleFor(x => x.Cpf)
-                .NotEmpty().WithMessage("Token must not be empty.")
-                .NotNull().WithMessage("Token must not be null.")
+                .NotEmpty().WithMessage("Cpf must not be empty.")
+                .NotNull().WithMessage("Cpf must not be null.")
                 .Matches(@"^\d{11}$")
                 .WithMessage("matches invalid Cpf");
 
             RuleFor(x => x.Gender)
-                .NotEmpty().WithMessage("Token must not be empty.")
-                .NotNull().WithMessage("Token must not be null.");
+                .NotEmpty().WithMessage("Gender must not be empty.")
+                .NotNull().WithMessage("Gender must not be null.");
 
             RuleFor(x => x.CellPhone)
-                .NotEmpty().WithMessage("Token must not be empty.")
-                .NotNull().WithMessage("Token must not be null.")
+                .NotEmpty().WithMessage("CellPhone must not be empty.")
+                .NotNull().WithMessage("CellPhone must not be null.")
                 .Matches(@"^\d{2} \d{5}-\d{4}$")
                 .WithMessage("matches invalid CellPhone");
 
             RuleFor(x => x.Telephone)
-                .NotEmpty().WithMessage("Token must not be empty.")
-                .NotNull().WithMessage("Token must not be null.")
+                .NotEmpty().WithMessage("Telephone must not be empty.")
+                .NotNull().WithMessage("Telephone must not be null.")
                 .Matches(@"^\d{2} \d{4}-\d{4}$")
-                .WithMessage("matches invalid CellPhone");
+                .WithMessage("matches invalid Telephone");
 
             RuleFor(x => x.BirthDateString)
-                .NotEmpty().WithMessage("Token must not be empty.")
-                .NotNull().WithMessage("Token must not be null.")
+                .NotEmpty().WithMessage("BirthDateString must not be empty.")
+                .NotNull().WithMessage("BirthDateString must not be null.")
                 .Matches(@"^\d{2}/\d{2}/\d{4}$")
                 .WithMessage("matches invalid BirthDateString");
 
             RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Token must not be empty.")
-                .NotNull().WithMessage("Token must not be null.")
+                .NotEmpty().WithMessage("Password must not be empty.")
+                .NotNull().WithMessage("Password must not be null.")
                 .Length(8, 30).WithMessage("Password must be between 8 and 30 length");
 
             RuleFor(x => x.TokenForCreation)
