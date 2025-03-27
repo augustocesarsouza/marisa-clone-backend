@@ -40,7 +40,8 @@ namespace Marisa.Infra.Data.Authentication
                 new Claim("userID", userId)
             };
 
-            var keySecret = _configuration["Key:Jwt"];
+            //var keySecret = _configuration["Key:Jwt"];
+            var keySecret = Environment.GetEnvironmentVariable("KEY_JWT");
 
             if (string.IsNullOrEmpty(keySecret) || keySecret.Length < 16)
                 return InfoErrors.Fail(new TokenOutValue(), "error token related");
