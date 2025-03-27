@@ -56,16 +56,21 @@ builder.Services.AddMvc().AddJsonOptions(options =>
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
 
-builder.Services.AddCors(options =>
+var frontEndUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? builder.Configuration["FRONTEND:URL"];
+
+if(frontEndUrl != null)
 {
-    options.AddPolicy("CorsPolity", builder =>
+    builder.Services.AddCors(options =>
     {
-        builder.WithOrigins("http://localhost:5173")
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
+        options.AddPolicy("CorsPolity", builder =>
+        {
+            builder.WithOrigins(frontEndUrl)
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+        });
     });
-});
+}
 
 //var keyJwtBearerSecret = builder.Configuration["Key:Jwt"];
 var keyJwtBearerSecret = Environment.GetEnvironmentVariable("KEY_JWT") ?? builder.Configuration["Key:Jwt"];
