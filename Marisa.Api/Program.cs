@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 
-ValidatorOptions.Global.LanguageManager.Culture = new System.Globalization.CultureInfo("en");
+ValidatorOptions.Global.LanguageManager.Culture = System.Globalization.CultureInfo.InvariantCulture;
 
 var builder = WebApplication.CreateBuilder(args);
 
