@@ -1,12 +1,16 @@
 ﻿using Marisa.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Marisa.Infra.Data.Context
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) 
+        private readonly IConfiguration _configuration;
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration) : base(options) 
         {
+            _configuration = configuration;
             Users = Set<User>();
         }
 
@@ -14,6 +18,9 @@ namespace Marisa.Infra.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var schema = Environment.GetEnvironmentVariable("DB_SCHEMA") ?? _configuration["DB:SCHEMA"];
+
+            modelBuilder.HasDefaultSchema(schema);
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
