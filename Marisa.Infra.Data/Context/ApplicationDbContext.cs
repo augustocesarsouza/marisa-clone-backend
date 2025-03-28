@@ -18,9 +18,10 @@ namespace Marisa.Infra.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //var schema = Environment.GetEnvironmentVariable("DB_SCHEMA") ?? _configuration["DB:SCHEMA"];
+            var schema = Environment.GetEnvironmentVariable("DB_SCHEMA") ?? _configuration["DB:SCHEMA"];
+            //var schema = "marisa";
 
-            modelBuilder.HasDefaultSchema("marisa");
+            modelBuilder.HasDefaultSchema(schema);
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
