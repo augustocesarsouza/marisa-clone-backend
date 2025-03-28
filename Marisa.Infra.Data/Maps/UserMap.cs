@@ -8,7 +8,7 @@ namespace Marisa.Infra.Data.Maps
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("tb_users");
+            builder.ToTable("tb_marisa_users");
 
             builder.HasKey(e => e.Id)
                 .HasName("pk_user");
