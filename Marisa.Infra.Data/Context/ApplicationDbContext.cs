@@ -20,7 +20,7 @@ namespace Marisa.Infra.Data.Context
         {
             //var schema = Environment.GetEnvironmentVariable("DB_SCHEMA") ?? _configuration["DB:SCHEMA"];
 
-            modelBuilder.HasDefaultSchema("marisa");
+            //modelBuilder.HasDefaultSchema("marisa");
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
