@@ -7,5 +7,6 @@ namespace Marisa.Application.Services.Interfaces
         public Task<ResultService<CreateUserDTO>> Create(UserDTO? userDTO);
         public Task<ResultService<UserDTO>> UpateProfile(UserDTO? userDTO);
         public Task<ResultService<ChangePasswordUserReturnDTO>> ChangePassword(ChangePasswordUser? changePasswordUser);
+        public Task<ResultService<UserTokenSentEmail>> SendTokenChangePassword(string email);
     }
 }

@@ -88,5 +88,22 @@ namespace Marisa.Infra.Data.UtilityExternal
                 return InfoErrors.Fail($"Falha ao enviar email, ERRO: ${ex.Message}");
             }
         }
+
+        public InfoErrors SendUrlChangePassword(User user, string? token)
+        {
+            try
+            {
+                var resultSend = _sendEmailBrevo.SendUrlChangePassword(user, token);
+
+                if (!resultSend.IsSucess)
+                    return InfoErrors.Fail(resultSend.Message ?? "error envio do email");
+
+                return InfoErrors.Ok("tudo certo com o envio do email");
+            }
+            catch (Exception ex)
+            {
+                return InfoErrors.Fail($"Falha ao enviar email, ERRO: ${ex.Message}");
+            }
+        }
     }
 }

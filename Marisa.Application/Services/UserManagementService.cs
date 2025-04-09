@@ -3,6 +3,7 @@ using Marisa.Application.CodeRandomUser.Interface;
 using Marisa.Application.DTOs;
 using Marisa.Application.DTOs.Validations.Interfaces;
 using Marisa.Application.Services.Interfaces;
+using Marisa.Domain.Authentication;
 using Marisa.Domain.Entities;
 using Marisa.Domain.Repositories;
 using Marisa.Infra.Data.CloudinaryConfigClass;
@@ -23,11 +24,14 @@ namespace Marisa.Application.Services
         private readonly ICloudinaryUti _cloudinaryUti;
         private readonly ICodeRandomDictionary _codeRandomDictionary;
         private readonly IQuantityAttemptChangePasswordDictionary _quantityAttemptChangePasswordDictionary;
+        private readonly ITokenGeneratorUser _tokenGeneratorUser;
+        private readonly ISendEmailUser _sendEmailUser;
 
         public UserManagementService(IUserRepository userRepository, IMapper mapper, IUnitOfWork unitOfWork,
             IUserCreateDTOValidator userCreateDTOValidator, IUserUpdateProfileDTOValidator userUpdateProfileDTOValidator,
             IUserCreateAccountFunction userCreateAccountFunction, ICloudinaryUti cloudinaryUti, IChangePasswordUserDTOValidator changePasswordUserDTOValidator,
-            ICodeRandomDictionary codeRandomDictionary, IQuantityAttemptChangePasswordDictionary quantityAttemptChangePasswordDictionary)
+            ICodeRandomDictionary codeRandomDictionary, IQuantityAttemptChangePasswordDictionary quantityAttemptChangePasswordDictionary, ITokenGeneratorUser tokenGeneratorUser,
+            ISendEmailUser sendEmailUser)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -39,6 +43,8 @@ namespace Marisa.Application.Services
             _cloudinaryUti = cloudinaryUti;
             _codeRandomDictionary = codeRandomDictionary;
             _quantityAttemptChangePasswordDictionary = quantityAttemptChangePasswordDictionary;
+            _tokenGeneratorUser = tokenGeneratorUser;
+            _sendEmailUser = sendEmailUser;
         }
 
         public async Task<ResultService<CreateUserDTO>> Create(UserDTO? userDTO)
@@ -260,6 +266,38 @@ namespace Marisa.Application.Services
             catch (Exception ex)
             {
                 return ResultService.Fail<ChangePasswordUserReturnDTO>(ex.Message);
+            }
+        }
+
+        public async Task<ResultService<UserTokenSentEmail>> SendTokenChangePassword(string email)
+        {
+            var userTokenSentEmail = new UserTokenSentEmail(false, "");
+
+            try
+            {
+                var user = await _userRepository.GetIfUserExistEmail(email);
+
+                if (user == null)
+                    return ResultService.Fail(userTokenSentEmail);
+
+                var tokenResult = _tokenGeneratorUser.GeneratorTokenUrlChangeEmail(user);
+                var token = tokenResult.Data.Acess_Token;
+                var sendTokenEmail = _sendEmailUser.SendUrlChangePassword(user, token);
+
+                userTokenSentEmail.SetMessage(sendTokenEmail.Message ?? "");
+
+                if (!sendTokenEmail.IsSucess)
+                    return ResultService.Fail(userTokenSentEmail);
+
+                userTokenSentEmail.SetTokenSentEmail(true);
+                userTokenSentEmail.SetMessage("token sent sucessfully");
+
+                return ResultService.Ok(userTokenSentEmail);
+            }
+            catch (Exception ex)
+            {
+                userTokenSentEmail.SetMessage(ex.Message);
+                return ResultService.Fail(userTokenSentEmail);
             }
         }
     }

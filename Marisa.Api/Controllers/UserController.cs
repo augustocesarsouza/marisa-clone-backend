@@ -129,7 +129,7 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("v1/user/change-password")]
+        [HttpPut("v1/public/user/change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordUser changePasswordUser)
         {
             var userAuth = _baseController.Validator(_currentUser);
@@ -137,6 +137,17 @@ namespace Marisa.Api.Controllers
                 return _baseController.Forbidden();
 
             var result = await _userManagementService.ChangePassword(changePasswordUser);
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("v1/public/user/send-token-change-password/{email}")]
+        public async Task<IActionResult> SendTokenChangePassword([FromRoute] string email)
+        {
+            var result = await _userManagementService.SendTokenChangePassword(email);
 
             if (result.IsSucess)
                 return Ok(result);

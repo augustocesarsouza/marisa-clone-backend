@@ -7,5 +7,6 @@ namespace Marisa.Infra.Data.UtilityExternal.Interface
     {
         public Task<InfoErrors> SendEmail(User user);
         public InfoErrors SendCodeRandom(User user, int code);
+        public InfoErrors SendUrlChangePassword(User user, string? token);
     }
 }
