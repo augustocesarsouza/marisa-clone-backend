@@ -279,9 +279,6 @@ namespace Marisa.Application.Services
         {
             try
             {
-                if (userConfirmCodeEmailDTO == null)
-                    return ResultService.Fail<UserConfirmCodeEmailDTO>("DTO NULL");
-
                 if (userConfirmCodeEmailDTO.Code == null || userConfirmCodeEmailDTO.Email == null)
                     return ResultService.Fail<UserConfirmCodeEmailDTO>("DTO property Is Null");
 

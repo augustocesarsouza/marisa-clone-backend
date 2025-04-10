@@ -51,5 +51,7 @@
         public string? SetUserImage(string? userImage) => UserImage = userImage;
         public string? SetToken(string? token) => Token = token;
         public int? SetTokenForCreation(int? tokenForCreation) => TokenForCreation = tokenForCreation;
+        public string? SetPassword(string? password) => Password = password;
+        public string? SetBirthDateString(string? birthDateString) => BirthDateString = birthDateString;
     }
 }
