@@ -65,7 +65,8 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IUserCreateDTOValidator, UserCreateDTOValidator>();
             services.AddScoped<IUserUpdateProfileDTOValidator, UserUpdateProfileDTOValidator>();
             services.AddScoped<IChangePasswordUserDTOValidator, ChangePasswordUserDTOValidator>();
-            
+            services.AddScoped<IUserChangePasswordTokenDTOValidator, UserChangePasswordTokenDTOValidator>();
+
             return services;
         }
     }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Marisa.Application.CodeRandomUser.Interface;
 using Marisa.Application.DTOs.Validations.Interfaces;
-using Marisa.Application.DTOs.Validations.UserValidator;
 using Marisa.Application.Services.Interfaces;
 using Marisa.Domain.Authentication;
 using Marisa.Domain.Repositories;
@@ -18,8 +17,9 @@ namespace Marisa.Application.ServicesTests
         public Mock<IUserCreateDTOValidator> UserCreateDTOValidatorMock { get; }
         public Mock<IUserUpdateProfileDTOValidator> UserUpdateProfileDTOValidatorMock { get; }
         public Mock<IUserCreateAccountFunction> UserCreateAccountFunctionMock { get; }
-        public Mock<ICloudinaryUti> CloudinaryUtiMock { get; }
         public Mock<IChangePasswordUserDTOValidator> ChangePasswordUserDTOValidatorMock { get; }
+        public Mock<IUserChangePasswordTokenDTOValidator> UserChangePasswordTokenDTOValidatorMock { get; }
+        public Mock<ICloudinaryUti> CloudinaryUtiMock { get; }
         public Mock<ICodeRandomDictionary> CodeRandomDictionaryMock { get; }
         public Mock<IQuantityAttemptChangePasswordDictionary> QuantityAttemptChangePasswordDictionaryMock { get; }
         public Mock<ITokenGeneratorUser> TokenGeneratorUserMock { get; }
@@ -33,8 +33,9 @@ namespace Marisa.Application.ServicesTests
             UserCreateDTOValidatorMock = new();
             UserUpdateProfileDTOValidatorMock = new();
             UserCreateAccountFunctionMock = new();
-            CloudinaryUtiMock = new();
             ChangePasswordUserDTOValidatorMock = new();
+            UserChangePasswordTokenDTOValidatorMock = new();
+            CloudinaryUtiMock = new();
             CodeRandomDictionaryMock = new();
             QuantityAttemptChangePasswordDictionaryMock = new();
             TokenGeneratorUserMock = new();

@@ -96,8 +96,8 @@ namespace Marisa.Infra.Data.Authentication
             if (string.IsNullOrEmpty(keySecret) || keySecret.Length < 16)
                 return InfoErrors.Fail(new TokenOutValue(), "error token related");
 
-            //var expires = DateTime.UtcNow.AddHours(1);
-            var expires = DateTime.UtcNow.AddSeconds(30);
+            var expires = DateTime.UtcNow.AddHours(1);
+            //var expires = DateTime.UtcNow.AddSeconds(10);
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keySecret));
             var tokenData = new JwtSecurityToken(
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256),

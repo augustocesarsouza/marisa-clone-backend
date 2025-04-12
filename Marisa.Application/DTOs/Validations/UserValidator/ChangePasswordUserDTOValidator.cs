@@ -29,9 +29,9 @@ namespace Marisa.Application.DTOs.Validations.UserValidator
             return Guid.TryParse(userId, out _);
         }
 
-        public ValidationResult ValidateDTO(ChangePasswordUser changePasswordUser)
+        public ValidationResult ValidateDTO(ChangePasswordUser userChangePasswordToken)
         {
-            return Validate(changePasswordUser);
+            return Validate(userChangePasswordToken);
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Marisa.Application.Services
         private readonly IUserUpdateProfileDTOValidator _userUpdateProfileDTOValidator;
         private readonly IUserCreateAccountFunction _userCreateAccountFunction;
         private readonly IChangePasswordUserDTOValidator _changePasswordUserDTOValidator;
+        private readonly IUserChangePasswordTokenDTOValidator _userChangePasswordTokenDTOValidator;
         private readonly ICloudinaryUti _cloudinaryUti;
         private readonly ICodeRandomDictionary _codeRandomDictionary;
         private readonly IQuantityAttemptChangePasswordDictionary _quantityAttemptChangePasswordDictionary;
@@ -30,7 +31,8 @@ namespace Marisa.Application.Services
         public UserManagementService(IUserRepository userRepository, IMapper mapper, IUnitOfWork unitOfWork,
             IUserCreateDTOValidator userCreateDTOValidator, IUserUpdateProfileDTOValidator userUpdateProfileDTOValidator,
             IUserCreateAccountFunction userCreateAccountFunction, ICloudinaryUti cloudinaryUti, IChangePasswordUserDTOValidator changePasswordUserDTOValidator,
-            ICodeRandomDictionary codeRandomDictionary, IQuantityAttemptChangePasswordDictionary quantityAttemptChangePasswordDictionary, ITokenGeneratorUser tokenGeneratorUser,
+            IUserChangePasswordTokenDTOValidator userChangePasswordTokenDTOValidator, ICodeRandomDictionary codeRandomDictionary, 
+            IQuantityAttemptChangePasswordDictionary quantityAttemptChangePasswordDictionary, ITokenGeneratorUser tokenGeneratorUser,
             ISendEmailUser sendEmailUser)
         {
             _userRepository = userRepository;
@@ -40,6 +42,7 @@ namespace Marisa.Application.Services
             _userUpdateProfileDTOValidator = userUpdateProfileDTOValidator;
             _userCreateAccountFunction = userCreateAccountFunction;
             _changePasswordUserDTOValidator = changePasswordUserDTOValidator;
+            _userChangePasswordTokenDTOValidator = userChangePasswordTokenDTOValidator;
             _cloudinaryUti = cloudinaryUti;
             _codeRandomDictionary = codeRandomDictionary;
             _quantityAttemptChangePasswordDictionary = quantityAttemptChangePasswordDictionary;
@@ -298,6 +301,45 @@ namespace Marisa.Application.Services
             {
                 userTokenSentEmail.SetMessage(ex.Message);
                 return ResultService.Fail(userTokenSentEmail);
+            }
+        }
+
+        public async Task<ResultService<UserDTO>> ChangePasswordUserToken(UserChangePasswordToken userChangePasswordToken)
+        {
+            var validateDTO = _userChangePasswordTokenDTOValidator.ValidateDTO(userChangePasswordToken);
+
+            if (!validateDTO.IsValid)
+                return ResultService.RequestError<UserDTO>("validation error check the information", validateDTO);
+
+            try
+            {
+                var userId = Guid.Parse(userChangePasswordToken.UserId ?? "");
+                var user = await _userRepository.GetUserById(userId);
+
+                if (user == null)
+                    return ResultService.Fail<UserDTO>("error DTO Is Null");
+
+                var newPassword = userChangePasswordToken.NewPassword ?? "";
+
+                byte[] saltBytes = _userCreateAccountFunction.GenerateSalt();
+
+                string hashedPassword = _userCreateAccountFunction.HashPassword(newPassword, saltBytes);
+                string base64Salt = Convert.ToBase64String(saltBytes);
+
+                user.SetValuePasswordHashAndSalt(hashedPassword, base64Salt);
+
+                var userUpdate = await _userRepository.UpdateAsync(user);
+
+                if (userUpdate == null)
+                    return ResultService.Fail<UserDTO>("Error userUpdate it is null");
+
+                var userDTOMap = _mapper.Map<UserDTO>(userUpdate);
+
+                return ResultService.Ok(userDTOMap);
+            }
+            catch (Exception ex)
+            {
+                return ResultService.Fail<UserDTO>(ex.Message);
             }
         }
     }

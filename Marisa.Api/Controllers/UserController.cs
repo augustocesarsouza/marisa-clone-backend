@@ -81,6 +81,17 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("v1/public/user/send-token-change-password/{email}")]
+        public async Task<IActionResult> SendTokenChangePassword([FromRoute] string email)
+        {
+            var result = await _userManagementService.SendTokenChangePassword(email);
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
         [HttpPost("v1/public/user/send-code-email")]
         public IActionResult ConfirmEmailSendCode([FromBody] UserDTO userDTO)
         {
@@ -129,7 +140,7 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("v1/public/user/change-password")]
+        [HttpPut("v1/user/change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordUser changePasswordUser)
         {
             var userAuth = _baseController.Validator(_currentUser);
@@ -144,10 +155,10 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/public/user/send-token-change-password/{email}")]
-        public async Task<IActionResult> SendTokenChangePassword([FromRoute] string email)
+        [HttpPut("v1/public/user/change-password-with-token")]
+        public async Task<IActionResult> ChangePasswordWithToken([FromBody] UserChangePasswordToken userChangePasswordToken)
         {
-            var result = await _userManagementService.SendTokenChangePassword(email);
+            var result = await _userManagementService.ChangePasswordUserToken(userChangePasswordToken);
 
             if (result.IsSucess)
                 return Ok(result);

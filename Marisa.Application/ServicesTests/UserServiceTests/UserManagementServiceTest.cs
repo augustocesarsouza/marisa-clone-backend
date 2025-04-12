@@ -21,9 +21,9 @@ namespace Marisa.Application.ServicesTests.UserServiceTests
                 _userManagementServiceConfiguration.MapperMock.Object, _userManagementServiceConfiguration.UnitOfWorkMock.Object,
             _userManagementServiceConfiguration.UserCreateDTOValidatorMock.Object, _userManagementServiceConfiguration.UserUpdateProfileDTOValidatorMock.Object,
             _userManagementServiceConfiguration.UserCreateAccountFunctionMock.Object, _userManagementServiceConfiguration.CloudinaryUtiMock.Object,
-            _userManagementServiceConfiguration.ChangePasswordUserDTOValidatorMock.Object, _userManagementServiceConfiguration.CodeRandomDictionaryMock.Object,
-            _userManagementServiceConfiguration.QuantityAttemptChangePasswordDictionaryMock.Object, _userManagementServiceConfiguration.TokenGeneratorUserMock.Object,
-            _userManagementServiceConfiguration.SendEmailUserMock.Object);
+            _userManagementServiceConfiguration.ChangePasswordUserDTOValidatorMock.Object, _userManagementServiceConfiguration.UserChangePasswordTokenDTOValidatorMock.Object,
+            _userManagementServiceConfiguration.CodeRandomDictionaryMock.Object,_userManagementServiceConfiguration.QuantityAttemptChangePasswordDictionaryMock.Object,
+            _userManagementServiceConfiguration.TokenGeneratorUserMock.Object, _userManagementServiceConfiguration.SendEmailUserMock.Object);
             _userManagementService = userManagementService;
         }
 

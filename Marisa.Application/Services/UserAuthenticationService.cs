@@ -144,47 +144,6 @@ namespace Marisa.Application.Services
         {
             return await VerifyPasswordUserIsValid(phone, password);
         }
-
-        public async Task<ResultService<UserPasswordUpdateDTO>> ChangePasswordUser(UserChangePasswordDTO userChangePasswordDTO)
-        {
-            try
-            {
-                //var result = await VerifyPasswordUserIsValid(userChangePasswordDTO.Phone, userChangePasswordDTO.Password);
-
-                //if (!result.IsSucess)
-                //{
-                //    return result;
-                //}
-
-                var user = await _userRepository.GetUserByEmailInfoUpdate(userChangePasswordDTO.Email);
-
-                if (user == null)
-                    return ResultService.Fail<UserPasswordUpdateDTO>("Error user null");
-
-                string newPassword = userChangePasswordDTO.ConfirmPassword;
-
-                byte[] saltBytes = _userCreateAccountFunction.GenerateSalt();
-                // Hash the password with the salt
-                string hashedPassword = _userCreateAccountFunction.HashPassword(newPassword, saltBytes);
-                string base64Salt = Convert.ToBase64String(saltBytes);
-
-                //byte[] retrievedSaltBytes = Convert.FromBase64String(base64Salt);
-
-                user.SetPasswordHash(hashedPassword);
-                user.SetSalt(base64Salt);
-
-                var userUpdate = await _userRepository.UpdateAsync(user);
-
-                if (userUpdate == null)
-                    return ResultService.Fail<UserPasswordUpdateDTO>("Error userUpdate it is null");
-
-                return ResultService.Ok(new UserPasswordUpdateDTO(true));
-            }
-            catch (Exception ex)
-            {
-                return ResultService.Fail<UserPasswordUpdateDTO>(ex.Message);
-            }
-        }
        
         private async Task<ResultService<UserLoginDTO>> VerifyPasswordUserIsValid(string email, string password)
         {

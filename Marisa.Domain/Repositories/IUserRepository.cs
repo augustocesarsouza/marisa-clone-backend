@@ -9,6 +9,7 @@ namespace Marisa.Domain.Repositories
         public Task<User?> GetUserByEmail(string email);
         public Task<User?> GetUserByIdInfoUser(Guid id);
         public Task<User?> GetInfoToUpdateProfile(Guid id);
+        public Task<User?> GetUserByIdCheckIfExist(Guid id);
         public Task<User?> GetUserInfoToLogin(string email);
         public Task<User?> GetUserByEmailInfoUpdate(string email);
         public Task<User?> GetUserByName(string name);
