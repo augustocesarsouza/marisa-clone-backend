@@ -16,6 +16,7 @@ using Marisa.Application.DTOs.Validations.Interfaces;
 using Marisa.Application.DTOs.Validations.UserValidator;
 using Marisa.Application.CodeRandomUser.Interface;
 using Marisa.Application.CodeRandomUser;
+using Marisa.Application.DTOs.Validations.AddressValidator;
 
 namespace Marisa.Infra.IoC
 {
@@ -39,6 +40,7 @@ namespace Marisa.Infra.IoC
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
             return services;
         }
 
@@ -54,6 +56,7 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             services.AddScoped<IUserManagementService, UserManagementService>();
             services.AddScoped<IUserCreateAccountFunction, UserCreateAccountFunction>();
+            services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<ITokenGeneratorUser, TokenGeneratorUser>();
             services.AddScoped<ICloudinaryUti, CloudinaryUti>();
             services.AddScoped<ICacheRedisUti, CacheRedisUti>();
@@ -66,7 +69,8 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IUserUpdateProfileDTOValidator, UserUpdateProfileDTOValidator>();
             services.AddScoped<IChangePasswordUserDTOValidator, ChangePasswordUserDTOValidator>();
             services.AddScoped<IUserChangePasswordTokenDTOValidator, UserChangePasswordTokenDTOValidator>();
-
+            services.AddScoped<IAddressCreateDTOValidator, AddressCreateDTOValidator>();
+            
             return services;
         }
     }

@@ -2,7 +2,6 @@
 using Marisa.Application.DTOs;
 using Marisa.Application.Services.Interfaces;
 using Marisa.Domain.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marisa.Api.Controllers

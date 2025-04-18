@@ -9,6 +9,7 @@ namespace Marisa.Application.Mappings
         public DtoToDomainMapping() 
         {
             CreateMap<UserDTO, User>();
+            CreateMap<AddressDTO, Address>();
         }
     }
 }

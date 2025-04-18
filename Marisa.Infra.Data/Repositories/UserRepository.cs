@@ -71,7 +71,7 @@ namespace Marisa.Infra.Data.Repositories
             var user = await _context
                 .Users
             .Where(u => u.Id == id)
-                .Select(x => new User(x.Id, x.Name, "", DateTime.Now, "", 'a', "", "", "", "", ""))
+                .Select(x => new User(x.Id, x.Name, x.Email, DateTime.Now, "", 'a', "", "", "", "", ""))
             .FirstOrDefaultAsync();
 
             return user;

@@ -12,9 +12,11 @@ namespace Marisa.Infra.Data.Context
         {
             _configuration = configuration;
             Users = Set<User>();
+            Address = Set<Address>();
         }
 
         public DbSet<User> Users { get; private set; }
+        public DbSet<Address> Address { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

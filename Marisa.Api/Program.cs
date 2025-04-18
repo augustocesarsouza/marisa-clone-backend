@@ -1,4 +1,5 @@
 using FluentValidation;
+using Marisa.Api;
 using Marisa.Api.Authentication;
 using Marisa.Api.Controllers;
 using Marisa.Api.ControllersInterface;
@@ -54,6 +55,8 @@ if (builder.Environment.IsDevelopment())
 builder.Services.AddMvc().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    //options.JsonSerializerOptions.Converters.Add(new IgnoreEmptyStringConverter());
+
 });
 
 var frontEndUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? builder.Configuration["FRONTEND:URL"];
