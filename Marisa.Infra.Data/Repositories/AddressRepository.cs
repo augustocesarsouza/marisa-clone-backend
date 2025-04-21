@@ -25,6 +25,16 @@ namespace Marisa.Infra.Data.Repositories
             return address;
         }
 
+        public async Task<List<Address>?> GetAllAddressByUserId(Guid? userId)
+        {
+            var address = await _context
+                .Address
+                .Where(u => u.UserId == userId)
+                .ToListAsync();
+
+            return address;
+        }
+
         public async Task<Address?> GetAddressByIdWithUser(Guid? id)
         {
             var stringEmpty = string.Empty;

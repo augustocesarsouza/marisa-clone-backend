@@ -8,9 +8,6 @@ using Marisa.Application.Services.Interfaces;
 using Marisa.Domain.Entities;
 using Marisa.Domain.Enum;
 using Marisa.Domain.Repositories;
-using Marisa.Infra.Data.Repositories;
-using Marisa.Infra.Data.UtilityExternal.Interface;
-using XAct.Users;
 
 namespace Marisa.Application.Services
 {
@@ -22,10 +19,11 @@ namespace Marisa.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAddressCreateDTOValidator _addressCreateDTOValidator;
         private readonly ICodeRandomDictionary _codeRandomDictionary;
-        private readonly ISendEmailUser _sendEmailUser;
+        private readonly IQuantityAttemptChangePasswordDictionary _quantityAttemptChangePasswordDictionary;
 
         public AddressService(IAddressRepository addressRepository, IUserRepository userRepository, IMapper mapper, IUnitOfWork unitOfWork,
-            IAddressCreateDTOValidator addressCreateDTOValidator, ICodeRandomDictionary codeRandomDictionary, ISendEmailUser sendEmailUser)
+            IAddressCreateDTOValidator addressCreateDTOValidator, ICodeRandomDictionary codeRandomDictionary,
+            IQuantityAttemptChangePasswordDictionary quantityAttemptChangePasswordDictionary)
         {
             _addressRepository = addressRepository;
             _userRepository = userRepository;
@@ -33,7 +31,7 @@ namespace Marisa.Application.Services
             _unitOfWork = unitOfWork;
             _addressCreateDTOValidator = addressCreateDTOValidator;
             _codeRandomDictionary = codeRandomDictionary;
-            _sendEmailUser = sendEmailUser;
+            _quantityAttemptChangePasswordDictionary = quantityAttemptChangePasswordDictionary;
         }
 
         public async Task<ResultService<AddressDTO>> GetAddressDTOById(Guid? id)
@@ -50,6 +48,23 @@ namespace Marisa.Application.Services
             catch (Exception ex)
             {
                 return ResultService.Fail<AddressDTO>(ex.Message);
+            }
+        }
+
+        public async Task<ResultService<List<AddressDTO>>> GetAllAddressByUserId(Guid? userId)
+        {
+            try
+            {
+                var addresses = await _addressRepository.GetAllAddressByUserId(userId);
+
+                if (addresses == null)
+                    return ResultService.Fail<List<AddressDTO>>("Addresses is null");
+
+                return ResultService.Ok(_mapper.Map<List<AddressDTO>>(addresses));
+            }
+            catch (Exception ex)
+            {
+                return ResultService.Fail<List<AddressDTO>>(ex.Message);
             }
         }
 
@@ -123,10 +138,53 @@ namespace Marisa.Application.Services
             return value;
         }
 
-        private static int GerarNumeroAleatorio()
+        public async Task<ResultService<AddressConfirmCodeEmailDTO>> VerifyCodeEmailToAddNewAddress(UserConfirmCodeEmailDTO userConfirmCodeEmailDTO)
         {
-            Random random = new Random();
-            return random.Next(100000, 1000000);
+            try
+            {
+                if (userConfirmCodeEmailDTO.Code == null || userConfirmCodeEmailDTO.Email == null)
+                    return ResultService.Fail<AddressConfirmCodeEmailDTO>("DTO property Is Null");
+
+                var email = userConfirmCodeEmailDTO.Email;
+
+                var userId = Guid.Parse(userConfirmCodeEmailDTO.UserId ?? "");
+                var userIdString = userId.ToString();
+
+                var (value, timeLeft) = _quantityAttemptChangePasswordDictionary.GetKey(userIdString);
+                var nextQuantity = value + 1;
+
+                if (nextQuantity == 4)
+                    return ResultService.Ok(new AddressConfirmCodeEmailDTO(false, nextQuantity, timeLeft));
+
+                if (_codeRandomDictionary.Container(email, int.Parse(userConfirmCodeEmailDTO.Code)))
+                {
+
+                    var userConfirmCodeEmail = new AddressConfirmCodeEmailDTO(true, 0, timeLeft);
+
+                    _codeRandomDictionary.Remove(email);
+                    _quantityAttemptChangePasswordDictionary.Remove(userIdString);
+
+                    return ResultService.Ok(userConfirmCodeEmail);
+                }
+                else
+                {
+                    if (nextQuantity == 3)
+                    {
+                        _quantityAttemptChangePasswordDictionary.AddTimer(userId.ToString(), nextQuantity);
+                        return ResultService.Ok(new AddressConfirmCodeEmailDTO(false, nextQuantity, timeLeft));
+                    }
+
+                    _quantityAttemptChangePasswordDictionary.Add(userId.ToString(), nextQuantity);
+
+                    var userConfirmCodeEmail = new AddressConfirmCodeEmailDTO(false, nextQuantity, timeLeft);
+
+                    return ResultService.Ok(userConfirmCodeEmail);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ResultService.Fail<AddressConfirmCodeEmailDTO>(ex.Message);
+            }
         }
     }
 }

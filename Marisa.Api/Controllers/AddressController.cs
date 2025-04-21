@@ -39,6 +39,21 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("v1/address/get-all-addresses-by-user-id/{userId}")]
+        public async Task<IActionResult> GetAllAddressByUserId([FromRoute] string userId)
+        {
+            var userAuth = _baseController.Validator(_currentUser);
+            if (userAuth == null)
+                return _baseController.Forbidden();
+
+            var result = await _addressService.GetAllAddressByUserId(Guid.Parse(userId));
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
         [HttpPost("v1/address/create")]
         public async Task<IActionResult> ConfirmEmailSendCode([FromBody] AddressDTO addressDTO)
         {
@@ -76,7 +91,7 @@ namespace Marisa.Api.Controllers
             if (userAuth == null)
                 return _baseController.Forbidden();
 
-            var results = await _userAuthenticationService.VerifyCodeEmail(userConfirmCodeEmailDTO);
+            var results = await _addressService.VerifyCodeEmailToAddNewAddress(userConfirmCodeEmailDTO);
 
             if (results.IsSucess)
                 return Ok(results);
