@@ -103,6 +103,14 @@ namespace Marisa.Application.Services
                 var addressMap = _mapper.Map<Address>(addressDTO);
                 addressMap.SetUserId(userId);
 
+                var checkIfUserAlreadyHasAddress = await _addressRepository.CheckIfUserAlreadyHasARegisteredAddress(userId);
+
+                addressMap.SetMainAddress(false);
+
+                if (checkIfUserAlreadyHasAddress == null)
+                    addressMap.SetMainAddress(true);
+
+
                 var data = await _addressRepository.CreateAsync(addressMap);
 
                 if (data == null)
@@ -184,6 +192,107 @@ namespace Marisa.Application.Services
             catch (Exception ex)
             {
                 return ResultService.Fail<AddressConfirmCodeEmailDTO>(ex.Message);
+            }
+        }
+
+        public async Task<ResultService<AddressDTO>> Update(AddressDTO? addressDTO)
+        {
+            if (addressDTO == null)
+                return ResultService.Fail<AddressDTO>("userDTO is null");
+
+            var validationUser = _addressCreateDTOValidator.ValidateDTO(addressDTO);
+
+            if (!validationUser.IsValid)
+                return ResultService.RequestError<AddressDTO>("validation error check the information", validationUser);
+
+            try
+            {
+                await _unitOfWork.BeginTransaction();
+
+                string tag = addressDTO.AddressType ?? "";
+                bool isValidTag = IsValidTagProduct(tag);
+
+                if (!isValidTag)
+                    return ResultService.Fail<AddressDTO>("provided type is not valid");
+
+                Guid id = Guid.NewGuid();
+
+                AddressType type;
+                type = (AddressType)Enum.Parse(typeof(AddressType), tag, true);
+
+                string description = GetEnumDescription(type);
+
+                var addressUpdate = await _addressRepository.GetAddressById(addressDTO.Id);
+
+                if(addressUpdate == null)
+                    return ResultService.Fail<AddressDTO>("address not found");
+
+                addressUpdate.SetAddressNickname(addressDTO.AddressNickname);
+                addressUpdate.SetAddressType(description);
+                addressUpdate.SetRecipientName(addressDTO.RecipientName);
+                addressUpdate.SetZipCode(addressDTO.ZipCode);
+                addressUpdate.SetStreet(addressDTO.Street);
+                addressUpdate.SetNumber(addressDTO.Number);
+                addressUpdate.SetComplement(addressDTO.Complement);
+                addressUpdate.SetNeighborhood(addressDTO.Neighborhood);
+                addressUpdate.SetCity(addressDTO.City);
+                addressUpdate.SetState(addressDTO.State);
+                addressUpdate.SetReferencePoint(addressDTO.ReferencePoint);
+
+                var data = await _addressRepository.UpdateAsync(addressUpdate);
+
+                if (data == null)
+                    return ResultService.Fail<AddressDTO>("error when update address null value");
+
+                await _unitOfWork.Commit();
+
+                return ResultService.Ok(_mapper.Map<AddressDTO>(data));
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.Rollback();
+                return ResultService.Fail<AddressDTO>(ex.Message);
+            }
+        }
+
+        public async Task<ResultService<AddressDTO>> DeleteAddress(Guid? addressId)
+        {
+            try
+            {
+                var addressToDelete = await _addressRepository.GetAddressById(addressId);
+
+                if (addressToDelete == null)
+                    return ResultService.Fail<AddressDTO>("Address is null");
+
+                var addressDelete = await _addressRepository.DeleteAsync(addressToDelete);
+
+                var valueMain = addressDelete.MainAddress ?? false;
+
+                if (valueMain)
+                {
+                    var firstElement = await _addressRepository.GetAddressFirstRegister();
+
+                    if(firstElement != null)
+                    {
+                        firstElement.SetMainAddress(true);
+
+                        var addressUpdated = await _addressRepository.UpdateAsync(firstElement);
+
+                        if (addressUpdated == null)
+                            return ResultService.Fail<AddressDTO>("error when update register");
+
+                        return ResultService.Ok(_mapper.Map<AddressDTO>(addressUpdated));
+                    }
+
+                    //if(firstElement == null)
+                    //    return ResultService.Fail<AddressDTO>("no records found");
+                }
+
+                return ResultService.Ok(_mapper.Map<AddressDTO>(addressDelete));
+            }
+            catch (Exception ex)
+            {
+                return ResultService.Fail<AddressDTO>(ex.Message);
             }
         }
     }

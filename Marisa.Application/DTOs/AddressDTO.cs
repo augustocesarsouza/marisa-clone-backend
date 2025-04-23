@@ -14,11 +14,12 @@
         public string? City { get; set; }
         public string? State { get; set; }
         public string? ReferencePoint { get; set; }
+        public bool? MainAddress { get; set; }
         public string? UserId { get; set; }
         public UserDTO UserDTO { get; private set; } = new UserDTO();
 
         public AddressDTO(Guid? id, string? addressNickname, string? addressType, string? recipientName, string? zipCode, string? street,
-            int? number, string? complement, string? neighborhood, string? city, string? state, string? referencePoint)
+            int? number, string? complement, string? neighborhood, string? city, string? state, string? referencePoint, bool? mainAddress)
         {
             Id = id;
             AddressNickname = addressNickname;
@@ -32,6 +33,7 @@
             City = city;
             State = state;
             ReferencePoint = referencePoint;
+            MainAddress = mainAddress;
         }
 
         public AddressDTO()
@@ -73,6 +75,10 @@
 
         public string? GetReferencePoint() => ReferencePoint;
         public void SetReferencePoint(string? value) => ReferencePoint = value;
+
+        public bool? GetMainAddress() => MainAddress;
+        public void SetMainAddress(bool? value) => MainAddress = value;
+
         public string? GetUserId() => UserId;
         public void SetUserId(string? value) => UserId = value;
     }

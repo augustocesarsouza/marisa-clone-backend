@@ -98,5 +98,35 @@ namespace Marisa.Api.Controllers
 
             return BadRequest(results);
         }
+
+        [HttpPut("v1/address/update")]
+        public async Task<IActionResult> Update([FromBody] AddressDTO addressDTO)
+        {
+            var userAuth = _baseController.Validator(_currentUser);
+            if (userAuth == null)
+                return _baseController.Forbidden();
+
+            var result = await _addressService.Update(addressDTO);
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        [HttpDelete("v1/address/delete/{addressId}")]
+        public async Task<IActionResult> Verfic([FromRoute] string addressId)
+        {
+            var userAuth = _baseController.Validator(_currentUser);
+            if (userAuth == null)
+                return _baseController.Forbidden();
+
+            var results = await _addressService.DeleteAddress(Guid.Parse(addressId));
+
+            if (results.IsSucess)
+                return Ok(results);
+
+            return BadRequest(results);
+        }
     }
 }

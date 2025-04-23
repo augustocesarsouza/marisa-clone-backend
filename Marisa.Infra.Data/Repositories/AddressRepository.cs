@@ -25,11 +25,36 @@ namespace Marisa.Infra.Data.Repositories
             return address;
         }
 
+        public async Task<Address?> GetAddressFirstRegister()
+        {
+            var address = await _context
+                .Address
+                .FirstOrDefaultAsync();
+
+            return address;
+        }
+
+        public async Task<Address?> CheckIfUserAlreadyHasARegisteredAddress(Guid? userId)
+        {
+            var address = await _context
+                .Address
+                .Where(u => u.UserId == userId)
+                .Select(x => new Address(x.Id, null, null, null, null, null, null, null, null, null, null, null, x.MainAddress))
+                .FirstOrDefaultAsync();
+
+            return address;
+        }
+
         public async Task<List<Address>?> GetAllAddressByUserId(Guid? userId)
         {
             var address = await _context
                 .Address
                 .Where(u => u.UserId == userId)
+                .Select(s => new Address(s.Id, s.AddressNickname, s.AddressType, s.RecipientName, s.ZipCode, s.Street,
+                s.Number, s.Complement, s.Neighborhood, s.City, s.State, s.RecipientName, s.MainAddress, s.UserId,
+                s.User != null
+                ? new User(s.User.Id, s.User.Name, null, null, s.User.Cpf, s.User.Gender, s.User.CellPhone,
+                null, null, null, null) : null))
                 .ToListAsync();
 
             return address;
@@ -43,7 +68,7 @@ namespace Marisa.Infra.Data.Repositories
                 .Address
                 .Where(u => u.Id == id)
                 .Select(s => new Address(s.Id, s.AddressNickname, s.AddressType, null, null, null,
-                null, null, null, null, null, null, s.UserId,
+                null, null, null, null, null, null, s.MainAddress, s.UserId,
                 s.User != null 
                 ? new User(s.User.Id, s.User.Name, null, null, s.User.Cpf, s.User.Gender, null,
                 null, null, null, null) : null))

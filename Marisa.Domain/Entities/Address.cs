@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel;
+using System.Net.Mail;
 using System.Reflection;
 using Marisa.Domain.Enum;
 
@@ -19,11 +20,12 @@ namespace Marisa.Domain.Entities
         public string? City { get; private set; } // Cidade
         public string? State { get; private set; } // UF
         public string? ReferencePoint { get; private set; } // Ponto de Referência
+        public bool? MainAddress { get; private set; }
         public Guid? UserId { get; private set; }
         public User? User { get; private set; }
 
         public Address(Guid? id, string? addressNickname, string? addressType, string? recipientName, string? zipCode, string? street, int? number, 
-            string? complement, string? neighborhood, string? city, string? state, string? referencePoint)
+            string? complement, string? neighborhood, string? city, string? state, string? referencePoint, bool? mainAddress)
         {
             Id = id;
             AddressNickname = addressNickname;
@@ -37,10 +39,11 @@ namespace Marisa.Domain.Entities
             City = city;
             State = state;
             ReferencePoint = referencePoint;
+            MainAddress = mainAddress;
         }
 
         public Address(Guid? id, string? addressNickname, string? addressType, string? recipientName, string? zipCode, string? street,
-            int? number, string? complement, string? neighborhood, string? city, string? state, string? referencePoint, Guid? userId, User? user) : this(id, addressNickname, addressType, recipientName, zipCode, street, number, complement, neighborhood, city, state, referencePoint)
+            int? number, string? complement, string? neighborhood, string? city, string? state, string? referencePoint, bool? mainAddress, Guid? userId, User? user) : this(id, addressNickname, addressType, recipientName, zipCode, street, number, complement, neighborhood, city, state, referencePoint, mainAddress)
         {
             UserId = userId;
             User = user;
@@ -98,6 +101,9 @@ namespace Marisa.Domain.Entities
 
         public string? GetReferencePoint() => ReferencePoint;
         public void SetReferencePoint(string? value) => ReferencePoint = value;
+
+        public bool? GetMainAddress() => MainAddress;
+        public void SetMainAddress(bool? value) => MainAddress = value;
 
         public Guid? GetUserId() => UserId;
         public void SetUserId(Guid? value) => UserId = value;

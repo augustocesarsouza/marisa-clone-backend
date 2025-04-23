@@ -72,6 +72,10 @@ namespace Marisa.Infra.Data.Maps
                 .HasColumnName("reference_point")
                 .HasMaxLength(200);
 
+            builder.Property(e => e.MainAddress)
+                .IsRequired()
+                .HasColumnName("main_address");
+
             //builder.HasIndex(e => e.UserId)
             //   .HasDatabaseName("ix_user_cupons_user_id");
 
