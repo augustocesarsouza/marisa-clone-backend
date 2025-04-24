@@ -9,6 +9,7 @@ namespace Marisa.Application.Services.Interfaces
         public Task<ResultService<AddressDTO>> Create(AddressDTO? addressDTO);
         public Task<ResultService<AddressConfirmCodeEmailDTO>> VerifyCodeEmailToAddNewAddress(UserConfirmCodeEmailDTO userConfirmCodeEmailDTO);
         public Task<ResultService<AddressDTO>> Update(AddressDTO? addressDTO);
+        public Task<ResultService<AddressDTO>> UpdateAddressPrimary(AddressDTO? addressDTO);
         public Task<ResultService<AddressDTO>> DeleteAddress(Guid? addressId);
     }
 }

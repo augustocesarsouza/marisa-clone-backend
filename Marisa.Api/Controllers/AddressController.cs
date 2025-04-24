@@ -114,6 +114,21 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
+        [HttpPut("v1/public/address/update-set-up-as-primary-address")]
+        public async Task<IActionResult> UpdateAddressPrimary([FromBody] AddressDTO addressDTO)
+        {
+            //var userAuth = _baseController.Validator(_currentUser);
+            //if (userAuth == null)
+            //    return _baseController.Forbidden();
+
+            var result = await _addressService.UpdateAddressPrimary(addressDTO);
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
         [HttpDelete("v1/address/delete/{addressId}")]
         public async Task<IActionResult> Verfic([FromRoute] string addressId)
         {

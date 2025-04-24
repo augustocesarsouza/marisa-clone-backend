@@ -6,6 +6,7 @@ namespace Marisa.Domain.Repositories
     {
         public Task<Address?> GetAddressById(Guid? id);
         public Task<Address?> GetAddressFirstRegister();
+        public Task<Address?> GetAddressSetAsPrimary();
         public Task<Address?> CheckIfUserAlreadyHasARegisteredAddress(Guid? userId);
         public Task<List<Address>?> GetAllAddressByUserId(Guid? userId);
         public Task<Address?> GetAddressByIdWithUser(Guid? id);

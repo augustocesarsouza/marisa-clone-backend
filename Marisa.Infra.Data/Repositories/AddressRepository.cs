@@ -34,6 +34,16 @@ namespace Marisa.Infra.Data.Repositories
             return address;
         }
 
+        public async Task<Address?> GetAddressSetAsPrimary()
+        {
+            var address = await _context
+                .Address
+                .Where(x => x.MainAddress == true)
+                .FirstOrDefaultAsync();
+
+            return address;
+        }
+
         public async Task<Address?> CheckIfUserAlreadyHasARegisteredAddress(Guid? userId)
         {
             var address = await _context

@@ -41,7 +41,7 @@ namespace Marisa.Application.Services
                 var address = await _addressRepository.GetAddressByIdWithUser(id);
 
                 if (address == null)
-                    return ResultService.Fail<AddressDTO>("Error user null");
+                    return ResultService.Fail<AddressDTO>("Error address null");
 
                 return ResultService.Ok(_mapper.Map<AddressDTO>(address));
             }
@@ -247,6 +247,53 @@ namespace Marisa.Application.Services
                 await _unitOfWork.Commit();
 
                 return ResultService.Ok(_mapper.Map<AddressDTO>(data));
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.Rollback();
+                return ResultService.Fail<AddressDTO>(ex.Message);
+            }
+        }
+
+        public async Task<ResultService<AddressDTO>> UpdateAddressPrimary(AddressDTO? addressDTO)
+        {
+            if (addressDTO == null)
+                return ResultService.Fail<AddressDTO>("userDTO is null");
+
+            if(addressDTO.Id == null)
+                return ResultService.Fail<AddressDTO>("error id address to updated value main address");
+
+            try
+            {
+                await _unitOfWork.BeginTransaction();
+
+                var addressPrimary = await _addressRepository.GetAddressSetAsPrimary();
+
+                if(addressPrimary == null)
+                    return ResultService.Fail<AddressDTO>("error primary address is null");
+
+                addressPrimary.SetMainAddress(false);
+
+                var data1 = await _addressRepository.UpdateAsync(addressPrimary);
+
+                if (data1 == null)
+                    return ResultService.Fail<AddressDTO>("error when update address that changed main address to false");
+
+                var addressToChangeValueMainAddress = await _addressRepository.GetAddressById(addressDTO.Id);
+
+                if (addressToChangeValueMainAddress == null)
+                    return ResultService.Fail<AddressDTO>("error address is null");
+
+                addressToChangeValueMainAddress.SetMainAddress(true);
+
+                var data2 = await _addressRepository.UpdateAsync(addressToChangeValueMainAddress);
+
+                if (data2 == null)
+                    return ResultService.Fail<AddressDTO>("error when update address that changed main address to true");
+
+                await _unitOfWork.Commit();
+
+                return ResultService.Ok(_mapper.Map<AddressDTO>(data2));
             }
             catch (Exception ex)
             {
