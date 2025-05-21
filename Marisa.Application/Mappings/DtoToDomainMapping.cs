@@ -10,6 +10,7 @@ namespace Marisa.Application.Mappings
         {
             CreateMap<UserDTO, User>();
             CreateMap<AddressDTO, Address>();
+            CreateMap<ProductDTO, Product>();
         }
     }
 }

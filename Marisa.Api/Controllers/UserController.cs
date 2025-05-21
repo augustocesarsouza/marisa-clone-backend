@@ -103,7 +103,7 @@ namespace Marisa.Api.Controllers
         }
 
         [HttpPost("v1/public/user/verify-code-send-to-email")]
-        public async Task<IActionResult> Verfic([FromBody] UserConfirmCodeEmailDTO userConfirmCodeEmailDTO)
+        public async Task<IActionResult> VerifyCodeEmail([FromBody] UserConfirmCodeEmailDTO userConfirmCodeEmailDTO)
         {
             var results = await _userAuthenticationService.VerifyCodeEmail(userConfirmCodeEmailDTO);
 

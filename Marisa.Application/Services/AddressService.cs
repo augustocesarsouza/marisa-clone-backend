@@ -6,7 +6,7 @@ using Marisa.Application.DTOs;
 using Marisa.Application.DTOs.Validations.Interfaces;
 using Marisa.Application.Services.Interfaces;
 using Marisa.Domain.Entities;
-using Marisa.Domain.Enum;
+using Marisa.Domain.Enums;
 using Marisa.Domain.Repositories;
 
 namespace Marisa.Application.Services
@@ -178,11 +178,11 @@ namespace Marisa.Application.Services
                 {
                     if (nextQuantity == 3)
                     {
-                        _quantityAttemptChangePasswordDictionary.AddTimer(userId.ToString(), nextQuantity);
+                        _quantityAttemptChangePasswordDictionary.AddTimer(userIdString, nextQuantity);
                         return ResultService.Ok(new AddressConfirmCodeEmailDTO(false, nextQuantity, timeLeft));
                     }
 
-                    _quantityAttemptChangePasswordDictionary.Add(userId.ToString(), nextQuantity);
+                    _quantityAttemptChangePasswordDictionary.Add(userIdString, nextQuantity);
 
                     var userConfirmCodeEmail = new AddressConfirmCodeEmailDTO(false, nextQuantity, timeLeft);
 

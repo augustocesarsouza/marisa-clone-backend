@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Marisa.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Marisa.Infra.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250508141446_CreateTableProduct")]
+    partial class CreateTableProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,9 +123,9 @@ namespace Marisa.Infra.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
-                    b.Property<long?>("Code")
+                    b.Property<int?>("Code")
                         .IsRequired()
-                        .HasColumnType("bigint")
+                        .HasColumnType("integer")
                         .HasColumnName("code");
 
                     b.Property<List<string>>("Colors")
@@ -186,17 +189,20 @@ namespace Marisa.Infra.Data.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("title");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("nvarchar(150)")
-                        .HasColumnName("type");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .IsRequired()
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
                     b.HasKey("Id")
                         .HasName("pk_product");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_product_user_id");
 
                     b.ToTable("tb_marisa_products", (string)null);
                 });
@@ -276,6 +282,15 @@ namespace Marisa.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_address_user");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Marisa.Domain.Entities.Product", b =>
+                {
+                    b.HasOne("Marisa.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

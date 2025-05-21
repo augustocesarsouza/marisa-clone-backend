@@ -2,6 +2,7 @@
 using Marisa.Application.CodeRandomUser.Interface;
 using Marisa.Application.DTOs;
 using Marisa.Application.DTOs.Validations.Interfaces;
+using Marisa.Application.DTOs.Validations.UserValidator;
 using Marisa.Application.Services.Interfaces;
 using Marisa.Domain.Authentication;
 using Marisa.Domain.Entities;
@@ -96,6 +97,8 @@ namespace Marisa.Application.Services
                 var day = birthDateSlice[0];
                 var month = birthDateSlice[1];
                 var year = birthDateSlice[2];
+                
+                {/* Quando fazer o Product no backend de algum jeito colocar uma variavel que saiba qual é o 'blusa, acessorios-e-bolsas, tricos' só com Product */}
 
                 var birthDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                 var birthDateUtc = DateTime.SpecifyKind(birthDate, DateTimeKind.Utc);
@@ -150,7 +153,7 @@ namespace Marisa.Application.Services
                 return ResultService.Fail<UserDTO>("userDTO is null");
 
             var validationUser = _userUpdateProfileDTOValidator.ValidateDTO(userDTO);
-
+            
             if (!validationUser.IsValid)
                 return ResultService.RequestError<UserDTO>("validation error check the information", validationUser);
 

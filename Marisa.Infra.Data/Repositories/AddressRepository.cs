@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Marisa.Domain.Entities;
+﻿using Marisa.Domain.Entities;
 using Marisa.Domain.Repositories;
 using Marisa.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;

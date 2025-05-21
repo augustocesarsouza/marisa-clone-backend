@@ -9,6 +9,7 @@ namespace Marisa.Infra.Data.UtilityExternal
     public class CloudinaryUti : ICloudinaryUti
     {
         private readonly Account _account;
+        private Cloudinary _cloudinary;
 
         private readonly IConfiguration _configuration;
 
@@ -16,22 +17,18 @@ namespace Marisa.Infra.Data.UtilityExternal
         {
             _configuration = configuration;
 
-            //var apiSecret = _configuration["Cloudinary:ApiSecret"];
-            //var apiKey = _configuration["Cloudinary:ApiKey"];
-            //var accountName = _configuration["Cloudinary:AccountName"];
-
             var apiSecret = Environment.GetEnvironmentVariable("CLOUDINARY_APISECRET") ?? _configuration["Cloudinary:ApiSecret"];
             var apiKey = Environment.GetEnvironmentVariable("CLOUDINARY_APIKEY") ?? _configuration["Cloudinary:ApiKey"];
             var accountName = Environment.GetEnvironmentVariable("CLOUDINARY_ACCOUNT_NAME") ?? _configuration["Cloudinary:AccountName"];
 
-            _account = new Account(apiSecret, apiKey, accountName);
+            _account = new Account(accountName, apiKey, apiSecret);
+            var cloudinary = new Cloudinary(_account);
+            _cloudinary = cloudinary;
         }
 
         public async Task<CloudinaryCreate> CreateMedia(string url, string folder, int width, int height)
         {
-            var cloudinary = new Cloudinary(_account);
 
-            // Verifica se é uma imagem ou vídeo
             bool isImage = url.StartsWith("data:image");
             bool isVideo = url.StartsWith("data:video");
 
@@ -44,12 +41,12 @@ namespace Marisa.Infra.Data.UtilityExternal
                     Folder = folder
                 };
 
-                var uploadResult = await cloudinary.UploadAsync(uploadParams);
+                var uploadResult = _cloudinary.Upload(uploadParams);
 
                 return new CloudinaryCreate
                 {
                     PublicId = uploadResult.PublicId,
-                    ImgUrl = cloudinary.Api.UrlImgUp.BuildUrl(uploadResult.PublicId),
+                    ImgUrl = _cloudinary.Api.UrlImgUp.BuildUrl(uploadResult.PublicId),
                 };
             }
             else if (isVideo)
@@ -61,12 +58,12 @@ namespace Marisa.Infra.Data.UtilityExternal
                     Folder = folder
                 };
 
-                var uploadResult = await cloudinary.UploadAsync(uploadParams);
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
                 return new CloudinaryCreate
                 {
                     PublicId = uploadResult.PublicId,
-                    ImgUrl = cloudinary.Api.UrlVideoUp.BuildUrl(uploadResult.PublicId),
+                    ImgUrl = _cloudinary.Api.UrlVideoUp.BuildUrl(uploadResult.PublicId),
                 };
             }
             else
@@ -75,17 +72,29 @@ namespace Marisa.Infra.Data.UtilityExternal
             }
         }
 
-        public CloudinaryResult DeleteMediaCloudinary(string url, ResourceType resourceType, Cloudinary cloudinary)
+        public CloudinaryResult DeleteMediaCloudinary(string url, ResourceType resourceType)
         {
             try
             {
-                var destroyParams = new DeletionParams(url) { ResourceType = resourceType };
-                cloudinary.Destroy(destroyParams);
+                var destroyParams = new DeletionParams(url)
+                {
+                    ResourceType = resourceType
+                };
 
-                if (destroyParams == null)
-                    return new CloudinaryResult(false, false, "destroyParamsIsNull");
+                var result = _cloudinary.Destroy(destroyParams);
 
-                return new CloudinaryResult(true, false, "delete successfully");
+                if (result.Result == "ok")
+                {
+                    return new CloudinaryResult(true, false, "Recurso deletado com sucesso.");
+                }
+                else if (result.Result == "not found")
+                {
+                    return new CloudinaryResult(false, false, "Recurso não encontrado.");
+                }
+                else
+                {
+                    return new CloudinaryResult(false, true, $"Erro ao deletar recurso: {result.Result}");
+                }
             }
             catch (Exception ex)
             {

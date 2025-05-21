@@ -55,7 +55,7 @@ namespace Marisa.Api.Controllers
         }
 
         [HttpPost("v1/address/create")]
-        public async Task<IActionResult> ConfirmEmailSendCode([FromBody] AddressDTO addressDTO)
+        public async Task<IActionResult> Create([FromBody] AddressDTO addressDTO)
         {
             var userAuth = _baseController.Validator(_currentUser);
             if (userAuth == null)
@@ -85,7 +85,7 @@ namespace Marisa.Api.Controllers
         }
 
         [HttpPost("v1/address/verify-code-send-to-email")]
-        public async Task<IActionResult> Verfic([FromBody] UserConfirmCodeEmailDTO userConfirmCodeEmailDTO)
+        public async Task<IActionResult> VerifyCodeEmailToAddNewAddress([FromBody] UserConfirmCodeEmailDTO userConfirmCodeEmailDTO)
         {
             var userAuth = _baseController.Validator(_currentUser);
             if (userAuth == null)
@@ -114,12 +114,12 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("v1/public/address/update-set-up-as-primary-address")]
+        [HttpPut("v1/address/update-set-up-as-primary-address")]
         public async Task<IActionResult> UpdateAddressPrimary([FromBody] AddressDTO addressDTO)
         {
-            //var userAuth = _baseController.Validator(_currentUser);
-            //if (userAuth == null)
-            //    return _baseController.Forbidden();
+            var userAuth = _baseController.Validator(_currentUser);
+            if (userAuth == null)
+                return _baseController.Forbidden();
 
             var result = await _addressService.UpdateAddressPrimary(addressDTO);
 
@@ -130,7 +130,7 @@ namespace Marisa.Api.Controllers
         }
 
         [HttpDelete("v1/address/delete/{addressId}")]
-        public async Task<IActionResult> Verfic([FromRoute] string addressId)
+        public async Task<IActionResult> Delete([FromRoute] string addressId)
         {
             var userAuth = _baseController.Validator(_currentUser);
             if (userAuth == null)

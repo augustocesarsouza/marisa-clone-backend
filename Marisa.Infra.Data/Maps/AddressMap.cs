@@ -86,7 +86,7 @@ namespace Marisa.Infra.Data.Maps
             builder.HasOne(e => e.User)
                 .WithMany(u => u.Addresses)
                 .HasForeignKey(e => e.UserId)
-                .HasConstraintName("fk_address_user"); ;
+                .HasConstraintName("fk_address_user");
         }
     }
 }

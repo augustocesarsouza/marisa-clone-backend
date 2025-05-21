@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Marisa.Domain.Enum
+namespace Marisa.Domain.Enums
 {
     public enum AddressType
     {

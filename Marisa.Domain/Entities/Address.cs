@@ -1,8 +1,7 @@
 ﻿
 using System.ComponentModel;
-using System.Net.Mail;
 using System.Reflection;
-using Marisa.Domain.Enum;
+using Marisa.Domain.Enums;
 
 namespace Marisa.Domain.Entities
 {
