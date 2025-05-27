@@ -1,6 +1,4 @@
-﻿using Marisa.Domain.Enums;
-
-namespace Marisa.Domain.Entities
+﻿namespace Marisa.Domain.Entities
 {
     public class Product
     {
@@ -21,10 +19,11 @@ namespace Marisa.Domain.Entities
         public DateTime? CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
         public string? Type { get; private set; }
+        public string? Category { get; private set; }
 
         public Product(Guid? id, string? title, long? code, double? price, double? priceDiscounted, int? discountPercentage, double? installmentPrice, 
             int? installmentTimesMarisaCard, int? installmentTimesCreditCard, List<string>? colors, List<string>? sizesAvailable, string? imageUrl, 
-            int? quantityAvailable, DateTime? createdAt, DateTime? updatedAt, string? type)
+            int? quantityAvailable, DateTime? createdAt, DateTime? updatedAt, string? type, string? category)
         {
             Id = id;
             Title = title;
@@ -42,6 +41,7 @@ namespace Marisa.Domain.Entities
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
             Type = type;
+            Category = category;
         }
 
         public Product()
@@ -66,6 +66,10 @@ namespace Marisa.Domain.Entities
         public void SetType(string type)
         {
             Type = type;
+        }
+        public void SetCategory(string category)
+        {
+            Category = category;
         }
     }
 }

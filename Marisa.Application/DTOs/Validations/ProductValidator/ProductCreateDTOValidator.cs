@@ -50,6 +50,11 @@ namespace Marisa.Application.DTOs.Validations.ProductValidator
                 .NotEmpty().WithMessage("QuantityAvailable must not be empty.")
                 .NotNull().WithMessage("QuantityAvailable must not be null.")
                 .GreaterThan(0).WithMessage("QuantityAvailable must be greater than 0");
+
+            RuleFor(x => x.Category)
+               .NotEmpty().WithMessage("Category must not be empty.")
+               .NotNull().WithMessage("Category must not be null.")
+               .MinimumLength(3).WithMessage("Category must be at least 3 characters long");
         }
         
 

@@ -35,6 +35,21 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("v1/public/product/get-all-product-by-type/{type}")]
+        public async Task<IActionResult> GetAllProductType([FromRoute] string type)
+        {
+            //var userAuth = _baseController.Validator(_currentUser);
+            //if (userAuth == null)
+            //    return _baseController.Forbidden();
+
+            var result = await _productService.GetAllProductType(type);
+
+            if (result.IsSucess)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
         [HttpPost("v1/public/product/create")]
         public async Task<IActionResult> Create([FromBody] ProductDTO productDTO)
         {

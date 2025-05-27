@@ -21,10 +21,11 @@ namespace Marisa.Application.DTOs
         public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
         public string? Type { get; set; }
+        public string? Category { get; set; }
 
         public ProductDTO(Guid? id, string? title, long? code, double? price, double? priceDiscounted, int? discountPercentage, 
             double? installmentPrice, int? installmentTimesMarisaCard, int? installmentTimesCreditCard, List<string>? colors, 
-            List<string>? sizesAvailable, string? imageUrl, int? quantityAvailable, DateTime? createdAt, DateTime? updatedAt, string? type)
+            List<string>? sizesAvailable, string? imageUrl, int? quantityAvailable, DateTime? createdAt, DateTime? updatedAt, string? type, string? category)
         {
             Id = id;
             Title = title;
@@ -42,6 +43,7 @@ namespace Marisa.Application.DTOs
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
             Type = type;
+            Category = category;
         }
 
         public ProductDTO()
@@ -66,6 +68,10 @@ namespace Marisa.Application.DTOs
         public void SetType(string type)
         {
             Type = type;
+        }
+        public void SetCategory(string category)
+        {
+            Category = category;
         }
     }
 }

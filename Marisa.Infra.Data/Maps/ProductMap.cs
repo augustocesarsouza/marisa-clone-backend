@@ -83,6 +83,11 @@ namespace Marisa.Infra.Data.Maps
             .IsRequired()
             .HasColumnName("type")
             .HasColumnType("varchar(150)");
+
+            builder.Property(e => e.Category)
+           .IsRequired()
+           .HasColumnName("category")
+           .HasColumnType("varchar(150)");
         }
     }
 }

@@ -26,6 +26,19 @@ namespace Marisa.Infra.Data.Repositories
             return product;
         }
 
+        public async Task<List<Product>?> GetAllProductType(string type)
+        {
+            var products = await _context
+               .Products
+               .Where(u => u.Type == type)
+               .Select(x => new Product(x.Id, x.Title, x.Code, x.Price, x.PriceDiscounted,
+               x.DiscountPercentage, x.InstallmentPrice, x.InstallmentTimesMarisaCard, x.InstallmentTimesCreditCard,
+               x.Colors, x.SizesAvailable, x.ImageUrl, x.QuantityAvailable, null, null, null, x.Category))
+               .ToListAsync();
+
+            return products;
+        }
+
         public async Task<Product?> GetProductById(Guid? productId)
         {
             var product = await _context

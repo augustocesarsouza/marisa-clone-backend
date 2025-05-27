@@ -48,6 +48,23 @@ namespace Marisa.Application.Services
             }
         }
 
+        public async Task<ResultService<List<ProductDTO>>> GetAllProductType(string type)
+        {
+            try
+            {
+                var products = await _productRepository.GetAllProductType(type);
+
+                if (products == null)
+                    return ResultService.Fail<List<ProductDTO>>("Error product null");
+
+                return ResultService.Ok(_mapper.Map<List<ProductDTO>>(products));
+            }
+            catch (Exception ex)
+            {
+                return ResultService.Fail<List<ProductDTO>>(ex.Message);
+            }
+        }
+
         public async Task<ResultService<ProductDTO>> Create(ProductDTO? productDTO)
         {
             if (productDTO == null)
