@@ -33,7 +33,7 @@ namespace Marisa.Infra.Data.Repositories
                .Where(u => u.Type == type)
                .Select(x => new Product(x.Id, x.Title, x.Code, x.Price, x.PriceDiscounted,
                x.DiscountPercentage, x.InstallmentPrice, x.InstallmentTimesMarisaCard, x.InstallmentTimesCreditCard,
-               x.Colors, x.SizesAvailable, x.ImageUrl, x.QuantityAvailable, null, null, null, x.Category))
+               x.Colors, x.SizesAvailable, x.ImageUrl, x.QuantityAvailable, null, null, x.Type, x.Category))
                .ToListAsync();
 
             return products;

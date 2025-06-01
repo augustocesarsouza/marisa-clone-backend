@@ -5,11 +5,11 @@ using Marisa.Domain.Entities;
 using Marisa.Domain.Repositories;
 using Marisa.Infra.Data.CloudinaryConfigClass;
 using Marisa.Infra.Data.UtilityExternal.Interface;
-using SixLabors.ImageSharp;
-using CloudinaryDotNet.Actions;
 using Marisa.Application.DTOs.Validations.Interfaces;
 using Marisa.Domain.EnumHelper;
 using Marisa.Domain.Enums;
+using SixLabors.ImageSharp;
+using CloudinaryDotNet.Actions;
 
 namespace Marisa.Application.Services
 {

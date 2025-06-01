@@ -21,6 +21,8 @@
         public string? Type { get; private set; }
         public string? Category { get; private set; }
 
+        // fazer outra tabela com as imagens principais e a parte de "Sobre o produto" "Composição" "Informações sobre o frete"
+
         public Product(Guid? id, string? title, long? code, double? price, double? priceDiscounted, int? discountPercentage, double? installmentPrice, 
             int? installmentTimesMarisaCard, int? installmentTimesCreditCard, List<string>? colors, List<string>? sizesAvailable, string? imageUrl, 
             int? quantityAvailable, DateTime? createdAt, DateTime? updatedAt, string? type, string? category)

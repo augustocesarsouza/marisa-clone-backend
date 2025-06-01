@@ -72,12 +72,12 @@ namespace Marisa.Application.Services
 
                 var createUserDTO = new CreateUserDTO(false, null);
 
-                if (!valueContain)
-                {
-                    // token errado retorna um erro personalizado da para criar um "DTO" que contem tipo Se o token está certo e o "DTO"
+                //if (!valueContain)
+                //{
+                //    // token errado retorna um erro personalizado da para criar um "DTO" que contem tipo Se o token está certo e o "DTO"
 
-                    return ResultService.Ok(createUserDTO);
-                }
+                //    return ResultService.Ok(createUserDTO);
+                //}
 
                 string password = userDTO.Password ?? "";
 
