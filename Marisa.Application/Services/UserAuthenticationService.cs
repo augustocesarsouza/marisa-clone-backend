@@ -54,6 +54,23 @@ namespace Marisa.Application.Services
             }
         }
 
+        public async Task<ResultService<UserDTO>> GetUserByIdJustToCheckIfExist(string userId)
+        {
+            try
+            {
+                var user = await _userRepository.GetUserByIdJustToCheckIfExist(Guid.Parse(userId));
+
+                if (user == null)
+                    return ResultService.Fail<UserDTO>("Error user null");
+
+                return ResultService.Ok(_mapper.Map<UserDTO>(user));
+            }
+            catch (Exception ex)
+            {
+                return ResultService.Fail<UserDTO>(ex.Message);
+            }
+        }
+
         public async Task<ResultService<UserDTO>> GetInfoToUpdateProfile(string userId)
         {
             try

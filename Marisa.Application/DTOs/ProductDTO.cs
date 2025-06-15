@@ -1,4 +1,5 @@
-﻿using Marisa.Domain.Enums;
+﻿using Marisa.Domain.Entities;
+using Marisa.Domain.Enums;
 
 namespace Marisa.Application.DTOs
 {
@@ -22,6 +23,12 @@ namespace Marisa.Application.DTOs
         public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
         public string? Type { get; set; }
         public string? Category { get; set; }
+
+        public List<string>? ImgsSecondary { get; set; }
+        public List<ProductInfoSection>? AboutProduct { get; set; }
+        public string? Composition { get; set; }
+        public string? ShippingInformation { get; set; }
+        public Guid? ProductId { get; set; }
 
         public ProductDTO(Guid? id, string? title, long? code, double? price, double? priceDiscounted, int? discountPercentage, 
             double? installmentPrice, int? installmentTimesMarisaCard, int? installmentTimesCreditCard, List<string>? colors, 

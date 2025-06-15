@@ -77,6 +77,17 @@ namespace Marisa.Infra.Data.Repositories
             return user;
         }
 
+        public async Task<User?> GetUserByIdJustToCheckIfExist(Guid userId)
+        {
+            var user = await _context
+                .Users
+            .Where(u => u.Id == userId)
+                .Select(x => new User(x.Id, null, null, null, null, 'a', null, null, null, null, null))
+            .FirstOrDefaultAsync();
+
+            return user;
+        }
+
         public async Task<User?> GetUserInfoToLogin(string email)
         {
             var user = await _context

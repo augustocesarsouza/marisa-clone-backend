@@ -23,6 +23,16 @@ namespace Marisa.Application.Mappings
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !(srcMember is string str && string.IsNullOrEmpty(str))
                 ));
+
+            CreateMap<ProductAdditionalInfo, ProductAdditionalInfoDTO>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !(srcMember is string str && string.IsNullOrEmpty(str))
+                ));
+
+            CreateMap<UserProductLike, UserProductLikeDTO>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !(srcMember is string str && string.IsNullOrEmpty(str))
+                ));
         }
     }
 }

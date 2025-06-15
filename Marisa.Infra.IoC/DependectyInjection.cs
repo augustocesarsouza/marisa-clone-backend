@@ -18,6 +18,8 @@ using Marisa.Application.CodeRandomUser.Interface;
 using Marisa.Application.CodeRandomUser;
 using Marisa.Application.DTOs.Validations.AddressValidator;
 using Marisa.Application.DTOs.Validations.ProductValidator;
+using Marisa.Application.DTOs.Validations.ProductAdditionalInfoValidator;
+using Marisa.Application.DTOs.Validations.UserProductLikeValidator;
 
 namespace Marisa.Infra.IoC
 {
@@ -43,6 +45,8 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductAdditionalInfoRepository, ProductAdditionalInfoRepository>();
+            services.AddScoped<IUserProductLikeRepository, UserProductLikeRepository>();
             return services;
         }
 
@@ -66,6 +70,8 @@ namespace Marisa.Infra.IoC
             services.AddScoped<ISendEmailBrevo, SendEmailBrevo>();
             services.AddScoped<ISendEmailUser, SendEmailUser>();
             services.AddScoped<ITransactionalEmailApiUti, TransactionalEmailApiUti>();
+            services.AddScoped<IProductAdditionalInfoService, ProductAdditionalInfoService>();
+            services.AddScoped<IUserProductLikeService, UserProductLikeService>();
             
             services.AddScoped<IUserSendCodeEmailDTOValidator, UserSendCodeEmailDTOValidator>();
             services.AddScoped<IUserCreateDTOValidator, UserCreateDTOValidator>();
@@ -75,6 +81,9 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IAddressCreateDTOValidator, AddressCreateDTOValidator>();
             services.AddScoped<IAddressUpdateDTOValidator, AddressUpdateDTOValidator>();
             services.AddScoped<IProductCreateDTOValidator, ProductCreateDTOValidator>();
+            services.AddScoped<IUserProductLikeCreateDTOValidator, UserProductLikeCreateDTOValidator>();
+            
+            services.AddScoped<IProductAdditionalInfoDTOValidator, ProductAdditionalInfoDTOValidator>();
             
             return services;
         }

@@ -14,13 +14,16 @@ namespace Marisa.Infra.Data.Context
             _configuration = configuration;
             Users = Set<User>();
             Address = Set<Address>();
-            Products = Set<Product>();
+            ProductAdditionalInfos = Set<ProductAdditionalInfo>();
+            UserProductLikes = Set<UserProductLike>();
         }
 
         public DbSet<User> Users { get; private set; }
         public DbSet<Address> Address { get; private set; }
         public DbSet<Product> Products { get; private set; }
-        
+        public DbSet<ProductAdditionalInfo> ProductAdditionalInfos { get; private set; }
+        public DbSet<UserProductLike> UserProductLikes { get; private set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

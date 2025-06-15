@@ -22,6 +22,7 @@
         public string? Category { get; private set; }
 
         // fazer outra tabela com as imagens principais e a parte de "Sobre o produto" "Composição" "Informações sobre o frete"
+        // e fazer Comments do Product
 
         public Product(Guid? id, string? title, long? code, double? price, double? priceDiscounted, int? discountPercentage, double? installmentPrice, 
             int? installmentTimesMarisaCard, int? installmentTimesCreditCard, List<string>? colors, List<string>? sizesAvailable, string? imageUrl, 

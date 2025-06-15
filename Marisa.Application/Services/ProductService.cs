@@ -16,19 +16,25 @@ namespace Marisa.Application.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IProductAdditionalInfoService _productAdditionalInfoService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICloudinaryUti _cloudinaryUti;
         private readonly IProductCreateDTOValidator _productCreateDTOValidator;
+        private readonly IProductAdditionalInfoDTOValidator _productAdditionalInfoDTOValidator;
 
         public ProductService(IProductRepository productRepository, IMapper mapper, IUnitOfWork unitOfWork,
-            ICloudinaryUti cloudinaryUti, IProductCreateDTOValidator productCreateDTOValidator)
+            ICloudinaryUti cloudinaryUti, IProductCreateDTOValidator productCreateDTOValidator,
+            IProductAdditionalInfoDTOValidator productAdditionalInfoDTOValidator,
+            IProductAdditionalInfoService productAdditionalInfoService)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _cloudinaryUti = cloudinaryUti;
             _productCreateDTOValidator = productCreateDTOValidator;
+            _productAdditionalInfoDTOValidator = productAdditionalInfoDTOValidator;
+            _productAdditionalInfoService = productAdditionalInfoService;
         }
 
         public async Task<ResultService<ProductDTO>> GetProductById(Guid? productId)
@@ -36,6 +42,23 @@ namespace Marisa.Application.Services
             try
             {
                 var product = await _productRepository.GetProductById(productId);
+
+                if (product == null)
+                    return ResultService.Fail<ProductDTO>("Error product null");
+
+                return ResultService.Ok(_mapper.Map<ProductDTO>(product));
+            }
+            catch (Exception ex)
+            {
+                return ResultService.Fail<ProductDTO>(ex.Message);
+            }
+        }
+
+        public async Task<ResultService<ProductDTO>> GetProductIfExist(string productId)
+        {
+            try
+            {
+                var product = await _productRepository.GetProductIfExist(Guid.Parse(productId));
 
                 if (product == null)
                     return ResultService.Fail<ProductDTO>("Error product null");
@@ -75,16 +98,25 @@ namespace Marisa.Application.Services
             if (!validationUser.IsValid)
                 return ResultService.RequestError<ProductDTO>("validation error check the information", validationUser);
 
+            var productAdditionalInfoDTO = new ProductAdditionalInfoDTO(null, productDTO.ImgsSecondary, productDTO.AboutProduct, 
+                productDTO.Composition, productDTO.ShippingInformation, null, null);
+
+            var validationProductAdditionalInfoDTO = _productAdditionalInfoDTOValidator.ValidateDTO(productAdditionalInfoDTO);
+
+            if (!validationProductAdditionalInfoDTO.IsValid)
+                return ResultService.RequestError<ProductDTO>("validation ProductAdditionalInfoDTO error check the information", validationProductAdditionalInfoDTO);
+
             try
             {
                 await _unitOfWork.BeginTransaction();
+
+                var productId = Guid.NewGuid();
 
                 if (productDTO.Type == null)
                     return ResultService.Fail<ProductDTO>("error Type it is null");
 
                 var enumHere = EnumHelper.GetEnumValueFromDescription<ProductType>(productDTO.Type);
 
-                var productId = Guid.NewGuid();
                 productDTO.SetId(productId);
 
                 Random random = new Random();
@@ -97,6 +129,8 @@ namespace Marisa.Application.Services
                 var valorDesconto = productDTO.Price * (productDTO.DiscountPercentage / 100.0);
                 var precoComDesconto = productDTO.Price - valorDesconto;
                 productDTO.SetPriceDiscounted(precoComDesconto);
+
+                // fazer a criação dos "ImgsSecondary" o array criar no cloudinary
 
                 if (productDTO.ImageUrlBase64 != null && productDTO.ImageUrlBase64.Length > 0)
                 {
@@ -128,14 +162,19 @@ namespace Marisa.Application.Services
                     productDTO.SetImageUrl(result.ImgUrl);
                 }
 
-                // fazer o "VER AS FORMAS DE PARCELAMENTO" onde tem os valores fazer isso no frontend
-
                 var product = _mapper.Map<Product>(productDTO);
 
                 var data = await _productRepository.CreateAsync(product);
 
                 if (data == null)
                     return ResultService.Fail<ProductDTO>("error when create product null value");
+
+                var productAdditionalInfoId = Guid.NewGuid();
+
+                productAdditionalInfoDTO.SetId(productAdditionalInfoId);
+                productAdditionalInfoDTO.SetProductId(productId);
+
+                var productAdditionalInfoCreate = await _productAdditionalInfoService.Create(productAdditionalInfoDTO);
 
                 await _unitOfWork.Commit();
 
@@ -158,6 +197,11 @@ namespace Marisa.Application.Services
 
                 if(product == null)
                     return ResultService.Fail<ProductDTO>("error product is null");
+
+                var deleteProductAdditionalInfo = await _productAdditionalInfoService.DeleteProductAdditionalInfo(product.Id);
+
+                if (deleteProductAdditionalInfo == null)
+                    return ResultService.Fail<ProductDTO>("error productAdditionalInfo is null");
 
                 string url = product.ImageUrl ?? "";
                 string startPattern = "/imgs-backend-frontend-marisa/backend/product/";

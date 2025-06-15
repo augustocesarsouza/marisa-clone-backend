@@ -5,6 +5,7 @@ namespace Marisa.Application.Services.Interfaces
     public interface IUserAuthenticationService
     {
         public Task<ResultService<UserDTO>> GetByIdInfoUser(string userId);
+        public Task<ResultService<UserDTO>> GetUserByIdJustToCheckIfExist(string userId);
         public Task<ResultService<UserDTO>> GetInfoToUpdateProfile(string userId);
         public Task<ResultService<UserLoginDTO>> Login(string email, string password);
         public Task<ResultService<UserLoginDTO>> VerifyPasswordUser(string phone, string password);

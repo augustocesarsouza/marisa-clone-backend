@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Marisa.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Marisa.Infra.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250603105309_CreateTableProductAdditionalInfo")]
+    partial class CreateTableProductAdditionalInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,37 +318,6 @@ namespace Marisa.Infra.Data.Migrations
                     b.ToTable("tb_marisa_users", (string)null);
                 });
 
-            modelBuilder.Entity("Marisa.Domain.Entities.UserProductLike", b =>
-                {
-                    b.Property<Guid?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_product_likes_id");
-
-                    b.Property<DateTime>("LikedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("liked_at");
-
-                    b.Property<Guid?>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("uuid")
-                        .HasColumnName("product_id");
-
-                    b.Property<Guid?>("UserId")
-                        .IsRequired()
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_user_product_likes");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("tb_user_product_likes", (string)null);
-                });
-
             modelBuilder.Entity("Marisa.Domain.Entities.Address", b =>
                 {
                     b.HasOne("Marisa.Domain.Entities.User", "User")
@@ -367,25 +339,6 @@ namespace Marisa.Infra.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Marisa.Domain.Entities.UserProductLike", b =>
-                {
-                    b.HasOne("Marisa.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Marisa.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Marisa.Domain.Entities.User", b =>
