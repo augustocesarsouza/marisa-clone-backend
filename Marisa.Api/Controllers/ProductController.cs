@@ -35,12 +35,12 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/public/product/get-all-product-by-type/{type}")]
+        [HttpGet("v1/product/get-all-product-by-type/{type}")]
         public async Task<IActionResult> GetAllProductType([FromRoute] string type)
         {
-            //var userAuth = _baseController.Validator(_currentUser);
-            //if (userAuth == null)
-            //    return _baseController.Forbidden();
+            var userAuth = _baseController.Validator(_currentUser);
+            if (userAuth == null)
+                return _baseController.Forbidden();
 
             var result = await _productService.GetAllProductType(type);
 

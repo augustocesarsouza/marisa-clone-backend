@@ -36,12 +36,12 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/public/user-product-like/get-user-product-by-product-id/{productId}/{userId}")]
+        [HttpGet("v1/user-product-like/get-user-product-by-product-id/{productId}/{userId}")]
         public async Task<IActionResult> GetUserProductLikeByProductId([FromRoute] string productId, [FromRoute] string userId)
         {
-            //var userAuth = _baseController.Validator(_currentUser);
-            //if (userAuth == null)
-            //    return _baseController.Forbidden();
+            var userAuth = _baseController.Validator(_currentUser);
+            if (userAuth == null)
+                return _baseController.Forbidden();
 
             var result = await _userProductLikeService.GetUserProductLikeByProductId(Guid.Parse(productId), Guid.Parse(userId));
 
@@ -66,7 +66,7 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("v1/public/user-product-like/create")]
+        [HttpPost("v1/user-product-like/create")]
         public async Task<IActionResult> Create([FromBody] UserProductLikeDTO userProductLikeDTO)
         {
             //var userAuth = _baseController.Validator(_currentUser);

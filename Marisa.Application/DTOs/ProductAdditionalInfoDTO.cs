@@ -10,6 +10,7 @@ namespace Marisa.Application.DTOs
         public string? Composition { get; set; }
         public string? ShippingInformation { get; set; }
         public Guid? ProductId { get; set; }
+        public string? ProductIdString { get; set; }
         public ProductDTO? ProductDTO { get; set; }
 
         public ProductAdditionalInfoDTO() { }

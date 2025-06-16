@@ -5,11 +5,8 @@ using Marisa.Application.Services.Interfaces;
 using Marisa.Domain.Entities;
 using Marisa.Domain.Repositories;
 using Marisa.Infra.Data.CloudinaryConfigClass;
-using Marisa.Infra.Data.Repositories;
-using Marisa.Infra.Data.UtilityExternal;
 using Marisa.Infra.Data.UtilityExternal.Interface;
 using SixLabors.ImageSharp;
-using XAct;
 
 namespace Marisa.Application.Services
 {

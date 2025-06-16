@@ -34,7 +34,7 @@ namespace Marisa.Api.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("v1/public/product-additional-info/get-by-product-id/{productId}")]
+        [HttpGet("v1/product-additional-info/get-by-product-id/{productId}")]
         public async Task<IActionResult> GetProductAdditionalInfoByProductId([FromRoute] string productId)
         {
             //var userAuth = _baseController.Validator(_currentUser);

@@ -130,7 +130,7 @@ namespace Marisa.Application.Services
 
                 await _unitOfWork.Commit();
 
-                return ResultService.Ok(_mapper.Map<UserProductLikeCreateOrDeleteDTO>(new UserProductLikeCreateOrDeleteDTO(false, true)));
+                return ResultService.Ok(new UserProductLikeCreateOrDeleteDTO(false, true));
             }
             catch (Exception ex)
             {
