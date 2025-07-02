@@ -110,7 +110,6 @@ namespace Marisa.Application.Services
                 if (checkIfUserAlreadyHasAddress == null)
                     addressMap.SetMainAddress(true);
 
-
                 var data = await _addressRepository.CreateAsync(addressMap);
 
                 if (data == null)

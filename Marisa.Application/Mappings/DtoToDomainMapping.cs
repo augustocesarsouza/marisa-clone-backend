@@ -13,6 +13,7 @@ namespace Marisa.Application.Mappings
             CreateMap<ProductDTO, Product>();
             CreateMap<ProductAdditionalInfoDTO, ProductAdditionalInfo>();
             CreateMap<UserProductLikeDTO, UserProductLike>();
+            CreateMap<ProductCommentDTO, ProductComment>();
         }
     }
 }

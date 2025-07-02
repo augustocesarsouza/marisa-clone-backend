@@ -20,6 +20,7 @@ using Marisa.Application.DTOs.Validations.AddressValidator;
 using Marisa.Application.DTOs.Validations.ProductValidator;
 using Marisa.Application.DTOs.Validations.ProductAdditionalInfoValidator;
 using Marisa.Application.DTOs.Validations.UserProductLikeValidator;
+using Marisa.Application.DTOs.Validations.ProductCommentValidator;
 
 namespace Marisa.Infra.IoC
 {
@@ -47,6 +48,7 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductAdditionalInfoRepository, ProductAdditionalInfoRepository>();
             services.AddScoped<IUserProductLikeRepository, UserProductLikeRepository>();
+            services.AddScoped<IProductCommentRepository, ProductCommentRepository>();
             return services;
         }
 
@@ -72,7 +74,8 @@ namespace Marisa.Infra.IoC
             services.AddScoped<ITransactionalEmailApiUti, TransactionalEmailApiUti>();
             services.AddScoped<IProductAdditionalInfoService, ProductAdditionalInfoService>();
             services.AddScoped<IUserProductLikeService, UserProductLikeService>();
-            
+            services.AddScoped<IProductCommentService, ProductCommentService>();
+
             services.AddScoped<IUserSendCodeEmailDTOValidator, UserSendCodeEmailDTOValidator>();
             services.AddScoped<IUserCreateDTOValidator, UserCreateDTOValidator>();
             services.AddScoped<IUserUpdateProfileDTOValidator, UserUpdateProfileDTOValidator>();
@@ -82,7 +85,7 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IAddressUpdateDTOValidator, AddressUpdateDTOValidator>();
             services.AddScoped<IProductCreateDTOValidator, ProductCreateDTOValidator>();
             services.AddScoped<IUserProductLikeCreateDTOValidator, UserProductLikeCreateDTOValidator>();
-            
+            services.AddScoped<IProductCommentCreateDTOValidator, ProductCommentCreateDTOValidator>();
             services.AddScoped<IProductAdditionalInfoDTOValidator, ProductAdditionalInfoDTOValidator>();
             
             return services;

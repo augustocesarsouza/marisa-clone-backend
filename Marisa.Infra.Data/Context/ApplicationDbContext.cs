@@ -1,5 +1,4 @@
 ﻿using Marisa.Domain.Entities;
-using Marisa.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -16,6 +15,7 @@ namespace Marisa.Infra.Data.Context
             Address = Set<Address>();
             ProductAdditionalInfos = Set<ProductAdditionalInfo>();
             UserProductLikes = Set<UserProductLike>();
+            ProductComments = Set<ProductComment>();
         }
 
         public DbSet<User> Users { get; private set; }
@@ -23,6 +23,7 @@ namespace Marisa.Infra.Data.Context
         public DbSet<Product> Products { get; private set; }
         public DbSet<ProductAdditionalInfo> ProductAdditionalInfos { get; private set; }
         public DbSet<UserProductLike> UserProductLikes { get; private set; }
+        public DbSet<ProductComment> ProductComments { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -8,6 +8,7 @@
         public Guid? UserId { get; private set; }
         public User? User { get; private set; }
         public DateTime? LikedAt { get; set; } = DateTime.UtcNow;
+        // atualizar aqui porque lá é 
 
         public UserProductLike(Guid? id, Guid? productId, Product? product, Guid? userId, User? user, DateTime? likedAt)
         {

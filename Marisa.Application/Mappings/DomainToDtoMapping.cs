@@ -33,6 +33,11 @@ namespace Marisa.Application.Mappings
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !(srcMember is string str && string.IsNullOrEmpty(str))
                 ));
+
+            CreateMap<ProductComment, ProductCommentDTO>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !(srcMember is string str && string.IsNullOrEmpty(str))
+                ));
         }
     }
 }

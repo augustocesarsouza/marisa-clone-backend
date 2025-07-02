@@ -1,12 +1,9 @@
-﻿using System.Threading.Tasks;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Marisa.Application.DTOs;
 using Marisa.Application.Services;
-using Marisa.Application.Services.Interfaces;
 using Marisa.Domain.Authentication;
 using Marisa.Domain.Entities;
 using Marisa.Domain.InfoErrors;
-using Microsoft.AspNetCore.Identity;
 using Moq;
 using Xunit;
 
