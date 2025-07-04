@@ -65,15 +65,15 @@ namespace Marisa.Application.Services
             }
         }
 
-        public async Task<ResultService<ProductCommentLikeCreateOrDelete>> Create(ProductCommentLikeCreate? productCommentLikeCreate)
+        public async Task<ResultService<ProductCommentLike>> Create(ProductCommentLikeCreate? productCommentLikeCreate)
         {
             if (productCommentLikeCreate == null)
-                return ResultService.Fail<ProductCommentLikeCreateOrDelete>("productCommentLikeCreate is null");
+                return ResultService.Fail<ProductCommentLike>("productCommentLikeCreate is null");
 
             var validation = _productCommentLikeCreateDTOValidator.ValidateDTO(productCommentLikeCreate);
 
             if (!validation.IsValid)
-                return ResultService.RequestError<ProductCommentLikeCreateOrDelete>("validation error check the information", validation);
+                return ResultService.RequestError<ProductCommentLike>("validation error check the information", validation);
 
             try
             {
@@ -90,12 +90,12 @@ namespace Marisa.Application.Services
                 var ifUserExist = await _userAuthenticationService.GetUserByIdJustToCheckIfExist(userId);
 
                 if (!ifUserExist.IsSucess)
-                    return ResultService.Fail<ProductCommentLikeCreateOrDelete>(ifUserExist.Message ?? "error get user");
+                    return ResultService.Fail<ProductCommentLike>(ifUserExist.Message ?? "error get user");
 
                 var ifProductCommentExist = await _productCommentService.GetProductCommentByIdIfExist(productCommentIdGuid);
 
                 if (!ifProductCommentExist.IsSucess)
-                    return ResultService.Fail<ProductCommentLikeCreateOrDelete>(ifProductCommentExist.Message ?? "error get product comment");
+                    return ResultService.Fail<ProductCommentLike>(ifProductCommentExist.Message ?? "error get product comment");
 
                 var productCommentLikeIfExist = await _productCommentLikeRespository.GetByProductCommentIdAndUser(productCommentIdGuid, userIdGuid);
 
@@ -106,11 +106,12 @@ namespace Marisa.Application.Services
                         var deleteProductCommentLike = await _productCommentLikeRespository.DeleteAsync(productCommentLikeIfExist);
 
                         if (deleteProductCommentLike == null)
-                            return ResultService.Fail<ProductCommentLikeCreateOrDelete>("error when delete ProductCommentLike");
+                            return ResultService.Fail<ProductCommentLike>("error when delete ProductCommentLike");
 
                         await _unitOfWork.Commit();
+                        deleteProductCommentLike.SetReaction(ReactionType.None);
 
-                        return ResultService.Ok(new ProductCommentLikeCreateOrDelete(ReactionType.None));
+                        return ResultService.Ok(_mapper.Map<ProductCommentLike>(deleteProductCommentLike));
                     }
 
                     if (productCommentLikeCreate.Reaction == ReactionType.Dislike)
@@ -126,11 +127,11 @@ namespace Marisa.Application.Services
                     var updateProductCommentLike = await _productCommentLikeRespository.UpdateAsync(productCommentLikeIfExist);
 
                     if (updateProductCommentLike == null)
-                        return ResultService.Fail<ProductCommentLikeCreateOrDelete>("error when update ProductCommentLike");
+                        return ResultService.Fail<ProductCommentLike>("error when update ProductCommentLike");
 
                     await _unitOfWork.Commit();
 
-                    return ResultService.Ok(new ProductCommentLikeCreateOrDelete(ReactionType.Dislike));
+                    return ResultService.Ok(_mapper.Map<ProductCommentLike>(updateProductCommentLike));
                 }
 
                 var likeOrDislike = ReactionType.Like;
@@ -148,16 +149,16 @@ namespace Marisa.Application.Services
                 var productCommentCreateHere = await _productCommentLikeRespository.CreateAsync(productCommentLike);
 
                 if (productCommentCreateHere == null)
-                    return ResultService.Fail<ProductCommentLikeCreateOrDelete>("error when create ProductCommentLike null value");
+                    return ResultService.Fail<ProductCommentLike>("error when create ProductCommentLike null value");
 
                 await _unitOfWork.Commit();
 
-                return ResultService.Ok(new ProductCommentLikeCreateOrDelete(likeOrDislike));
+                return ResultService.Ok(_mapper.Map<ProductCommentLike>(productCommentLike));
             }
             catch (Exception ex)
             {
                 await _unitOfWork.Rollback();
-                return ResultService.Fail<ProductCommentLikeCreateOrDelete>(ex.Message);
+                return ResultService.Fail<ProductCommentLike>(ex.Message);
             }
         }
     }

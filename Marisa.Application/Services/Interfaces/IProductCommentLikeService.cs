@@ -1,4 +1,5 @@
 ﻿using Marisa.Application.DTOs;
+using Marisa.Domain.Entities;
 
 namespace Marisa.Application.Services.Interfaces
 {
@@ -6,6 +7,6 @@ namespace Marisa.Application.Services.Interfaces
     {
         public Task<ResultService<ProductCommentLikeDTO>> GetProductCommentLikeById(Guid? productCommentLikeId);
         public Task<ResultService<List<ProductCommentLikeDTO>>> GetAllProductCommentLikeByProductId(Guid? productId);
-        public Task<ResultService<ProductCommentLikeCreateOrDelete>> Create(ProductCommentLikeCreate? productCommentLikeCreate);
+        public Task<ResultService<ProductCommentLike>> Create(ProductCommentLikeCreate? productCommentLikeCreate);
     }
 }
