@@ -45,6 +45,24 @@ namespace Marisa.Application.Services
             }
         }
 
+        public async Task<ResultService<ProductCommentDTO>> GetProductCommentByIdIfExist(Guid productCommentId)
+        {
+            try
+            {
+                var ProductComment = await _productCommentRepository.GetProductCommentByIdIfExist(productCommentId);
+
+                if (ProductComment == null)
+                    return ResultService.Fail<ProductCommentDTO>("Error ProductComment null");
+
+                return ResultService.Ok(_mapper.Map<ProductCommentDTO>(ProductComment));
+            }
+            catch (Exception ex)
+            {
+                return ResultService.Fail<ProductCommentDTO>(ex.Message);
+            }
+        }
+
+
         public async Task<ResultService<List<ProductCommentDTO>>> GetAllProductCommentByUserIdAndProductId(Guid productId)
         {
             try

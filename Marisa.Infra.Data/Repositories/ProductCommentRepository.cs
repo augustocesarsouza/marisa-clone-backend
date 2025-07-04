@@ -24,6 +24,17 @@ namespace Marisa.Infra.Data.Repositories
             return productComment;
         }
 
+        public async Task<ProductComment?> GetProductCommentByIdIfExist(Guid? productCommentid)
+        {
+            var productComment = await _context
+               .ProductComments
+               .Where(u => u.Id == productCommentid)
+               .Select(x => new ProductComment(x.Id, null, null, null, null, null, null, null, null, null, null))
+               .FirstOrDefaultAsync();
+
+            return productComment;
+        }
+
         public async Task<List<ProductComment>?> GetAllProductCommentByUserIdAndProductId(Guid? productId)
         {
             var productComments = await _context

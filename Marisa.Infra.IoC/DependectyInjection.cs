@@ -1,26 +1,27 @@
-﻿using Marisa.Application.Mappings;
+﻿using brevo_csharp.Api;
+using Marisa.Application.CodeRandomUser;
+using Marisa.Application.CodeRandomUser.Interface;
+using Marisa.Application.DTOs.Validations.AddressValidator;
+using Marisa.Application.DTOs.Validations.Interfaces;
+using Marisa.Application.DTOs.Validations.ProductAdditionalInfoValidator;
+using Marisa.Application.DTOs.Validations.ProductCommentLikeValidator;
+using Marisa.Application.DTOs.Validations.ProductCommentValidator;
+using Marisa.Application.DTOs.Validations.ProductValidator;
+using Marisa.Application.DTOs.Validations.UserProductLikeValidator;
+using Marisa.Application.DTOs.Validations.UserValidator;
+using Marisa.Application.Mappings;
+using Marisa.Application.Services;
+using Marisa.Application.Services.Interfaces;
+using Marisa.Domain.Authentication;
 using Marisa.Domain.Repositories;
-using Marisa.Infra.Data.Repositories;
+using Marisa.Infra.Data.Authentication;
 using Marisa.Infra.Data.Context;
+using Marisa.Infra.Data.Repositories;
+using Marisa.Infra.Data.UtilityExternal;
+using Marisa.Infra.Data.UtilityExternal.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Marisa.Domain.Authentication;
-using Marisa.Infra.Data.Authentication;
-using Marisa.Infra.Data.UtilityExternal;
-using Marisa.Infra.Data.UtilityExternal.Interface;
-using Marisa.Application.Services.Interfaces;
-using Marisa.Application.Services;
-using brevo_csharp.Api;
-using Marisa.Application.DTOs.Validations.Interfaces;
-using Marisa.Application.DTOs.Validations.UserValidator;
-using Marisa.Application.CodeRandomUser.Interface;
-using Marisa.Application.CodeRandomUser;
-using Marisa.Application.DTOs.Validations.AddressValidator;
-using Marisa.Application.DTOs.Validations.ProductValidator;
-using Marisa.Application.DTOs.Validations.ProductAdditionalInfoValidator;
-using Marisa.Application.DTOs.Validations.UserProductLikeValidator;
-using Marisa.Application.DTOs.Validations.ProductCommentValidator;
 
 namespace Marisa.Infra.IoC
 {
@@ -49,6 +50,7 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IProductAdditionalInfoRepository, ProductAdditionalInfoRepository>();
             services.AddScoped<IUserProductLikeRepository, UserProductLikeRepository>();
             services.AddScoped<IProductCommentRepository, ProductCommentRepository>();
+            services.AddScoped<IProductCommentLikeRespository, ProductCommentLikeRespository>();
             return services;
         }
 
@@ -75,6 +77,7 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IProductAdditionalInfoService, ProductAdditionalInfoService>();
             services.AddScoped<IUserProductLikeService, UserProductLikeService>();
             services.AddScoped<IProductCommentService, ProductCommentService>();
+            services.AddScoped<IProductCommentLikeService, ProductCommentLikeService>();
 
             services.AddScoped<IUserSendCodeEmailDTOValidator, UserSendCodeEmailDTOValidator>();
             services.AddScoped<IUserCreateDTOValidator, UserCreateDTOValidator>();
@@ -87,7 +90,8 @@ namespace Marisa.Infra.IoC
             services.AddScoped<IUserProductLikeCreateDTOValidator, UserProductLikeCreateDTOValidator>();
             services.AddScoped<IProductCommentCreateDTOValidator, ProductCommentCreateDTOValidator>();
             services.AddScoped<IProductAdditionalInfoDTOValidator, ProductAdditionalInfoDTOValidator>();
-            
+            services.AddScoped<IProductCommentLikeCreateDTOValidator, ProductCommentLikeCreateDTOValidator>();
+
             return services;
         }
     }
